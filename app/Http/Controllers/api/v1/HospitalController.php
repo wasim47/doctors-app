@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\HospitalStoreRequest;
 use App\Http\Resources\HospitalResource;
 use App\Models\Hospital;
 use App\Services\HospitalService;
 
-class HospitalController extends Controller
+class HospitalController extends BaseController
 {
 
     protected $service;

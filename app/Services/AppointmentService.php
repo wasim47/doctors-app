@@ -13,20 +13,20 @@ class AppointmentService {
         $this->repository = $repository;
     }
 
-    public function index(){
+    public function index($type){
 
-        return $this->repository->getList();
+        return $this->repository->getList($type);
     }
 
 
     public function store($data){
 
-        $this->repository->create($data);
+        return $this->repository->create($data);
     }
 
-    public function find($data){
+    public function find($id){
 
-        $this->repository->create($data);
+        return $this->repository->find($id);
     }
 
     public function update($id, $data){

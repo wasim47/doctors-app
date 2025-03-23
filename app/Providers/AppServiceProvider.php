@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+// All dependency for API
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\AppointmentRepository;
 use App\Repositories\AppointmentRepositoryInterface;
@@ -21,6 +22,32 @@ use App\Repositories\CancelationRepository;
 use App\Repositories\CancelationRepositoryInterface;
 use App\Repositories\HospitalRepository;
 use App\Repositories\HospitalRepositoryInterface;
+use App\Repositories\BranchRepository;
+use App\Repositories\BranchRepositoryInterface;
+use App\Repositories\CommonRepository;
+use App\Repositories\CommonRepositoryInterface;
+use App\Repositories\UserRepositoryInterface;
+use App\Repositories\UserRepository;
+
+// All dependency for Admin
+/* use App\Repositories\Admin\AdminAppointmentRepository;
+use App\Repositories\Admin\AdminAppointmentRepositoryInterface;
+use App\Repositories\Admin\AdminSpecialtyRepository;
+use App\Repositories\Admin\AdminSpecialtyRepositoryInterface;
+use App\Repositories\Admin\AdminBlogRepository;
+use App\Repositories\Admin\AdminBlogRepositoryInterface;
+use App\Repositories\Admin\AdminDoctorRepository;
+use App\Repositories\Admin\AdminDoctorRepositoryInterface;
+use App\Repositories\Admin\AdminPatientRepository;
+use App\Repositories\Admin\AdminPatientRepositoryInterface;
+use App\Repositories\Admin\AdminScheduleRepository;
+use App\Repositories\Admin\AdminScheduleRepositoryInterface;
+use App\Repositories\Admin\AdminReviewRepository;
+use App\Repositories\Admin\AdminReviewRepositoryInterface;
+use App\Repositories\Admin\AdminCancelationRepository;
+use App\Repositories\Admin\AdminCancelationRepositoryInterface;
+use App\Repositories\Admin\AdminHospitalRepository;
+use App\Repositories\Admin\AdminHospitalRepositoryInterface; */
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // All dependency for API
         $this->app->bind(SpecialtyRepositoryInterface::class, SpecialtyRepository::class);
         $this->app->bind(BlogRepositoryInterface::class, BlogRepository::class);
         $this->app->bind(PatientRepositoryInterface::class, PatientRepository::class);
@@ -38,6 +66,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CancelationRepositoryInterface::class, CancelationRepository::class);
         $this->app->bind(AppointmentRepositoryInterface::class, AppointmentRepository::class);
         $this->app->bind(HospitalRepositoryInterface::class, HospitalRepository::class);
+        $this->app->bind(BranchRepositoryInterface::class, BranchRepository::class);
+        $this->app->bind(CommonRepositoryInterface::class, CommonRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
 
     /**
@@ -45,6 +76,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+       //
     }
 }

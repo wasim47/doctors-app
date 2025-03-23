@@ -56,7 +56,7 @@ class BaseController extends Controller
      * Return error json response
      * @return JsonResponse
      */
-    public function errorRessponse($error, $errorMessages = [], $code = 404)
+    public function errorResponse($error, $errorMessages = [], $code = 404)
     {
         try {
             $response = [

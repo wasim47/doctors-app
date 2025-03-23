@@ -21,21 +21,16 @@ class ScheduleService {
 
     public function store($data){
 
-        $this->repository->create($data);
+        return $this->repository->create($data);
     }
 
-    public function find($data){
+    public function find($id){
 
-        $this->repository->create($data);
+        return $this->repository->find($id);
     }
 
     public function update($id, $data){
 
-        $this->repository->update($id, $data);
-    }
-
-    public function delete($id){
-
-        $this->repository->delete($id);
+        return $this->repository->update($id, $data);
     }
 }

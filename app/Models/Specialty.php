@@ -15,4 +15,11 @@ class Specialty extends Model
     protected $fillable = [];
 
     protected $guarded = ['id'];
+
+    protected $hidden = ['pivot'];
+
+    public function doctors()
+    {
+        return $this->belongsToMany(Doctor::class, 'doctor_specialities', 'speciality_id', 'doctor_id');
+    }
 }

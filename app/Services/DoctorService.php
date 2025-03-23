@@ -13,6 +13,21 @@ class DoctorService {
         $this->repository = $repository;
     }
 
+     ////////////////// API ////////
+     public function getList($data){
+
+        return $this->repository->getApiList($data);
+    }
+
+
+    public function findApp($id){
+
+        $data = $this->repository->findApp($id);
+        return $data;
+    }
+
+
+    ////////////////// Admin ////////
     public function index(){
 
         return $this->repository->getList();
@@ -21,21 +36,17 @@ class DoctorService {
 
     public function store($data){
 
-        $this->repository->create($data);
+        return $this->repository->create($data);
     }
 
-    public function find($data){
+    public function find($id){
 
-        $this->repository->create($data);
+        $data = $this->repository->find($id);
+        return $data;
     }
 
     public function update($id, $data){
 
-        $this->repository->update($id, $data);
-    }
-
-    public function delete($id){
-
-        $this->repository->delete($id);
+        return $this->repository->update($id, $data);
     }
 }

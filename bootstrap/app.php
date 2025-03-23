@@ -13,7 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'auth' => \App\Http\Middleware\Authenticate::class,
+            //'auth.api' => \App\Http\Middleware\Authenticate::class,         // API authentication using Passport
+            'auth.api' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+            'auth.admin' => \App\Http\Middleware\AdminAuthenticate::class,  // Admin authentication
+            'auth.user' => \App\Http\Middleware\UserAuthenticate::class,    // User authentication
+            'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

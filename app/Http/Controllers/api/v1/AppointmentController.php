@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\AppointmentStoreRequest;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
 use App\Services\AppointmentService;
+use Illuminate\Http\Request;
 
-class AppointmentController extends Controller
+class AppointmentController extends BaseController
 {
 
     protected $service;
@@ -16,28 +17,49 @@ class AppointmentController extends Controller
     public function __construct(AppointmentService $service)
     {
         $this->service = $service;
-        
     }
-
-    /**
-     * @OA\Get(
-     *     path="/api/appointment",
-     *     @OA\Response(response="200", description="An example endpoint")
-     * )
-     */
-
     //// Get all Speciality form app
-    public function index(){
-        
-        // return response()->json($this->service->index(), 200);
-        return AppointmentResource::collection($this->service->index());
+    public function index($type)
+    {
+        return AppointmentResource::collection($this->service->index($type));
     }
 
+    public function show($id = null)
+    {
 
-    // Add new specialty with custom validation rules
-    public function store(AppointmentStoreRequest $request){
+        return response()->json($this->service->find($id));
+    }
 
-        // return response()->json($this->service->store($request->all()), 201);
-        return new AppointmentResource($this->service->store($request->all()));
+    public function store(AppointmentStoreRequest $request)
+    {
+        try {
+            $validatedData = $request->validated();
+            $appointment = $this->service->store($validatedData);
+            if($appointment){
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Appointment created successfully',
+                    'data' => $appointment
+                ], 201);
+            }
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 422);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

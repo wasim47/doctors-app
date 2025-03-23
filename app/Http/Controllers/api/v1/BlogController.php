@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\BlogStoreRequest;
 use App\Http\Resources\BlogResource;
 use App\Models\Blog;
 use App\Services\BlogService;
 
-class BlogController extends Controller
+class BlogController extends BaseController
 {
 
     protected $service;
@@ -25,6 +25,7 @@ class BlogController extends Controller
      *     @OA\Response(response="200", description="An example endpoint")
      * )
      */
+    
     //// Get all Speciality form app
     public function index(){
         

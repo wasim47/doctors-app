@@ -15,13 +15,15 @@ class SpecialtyResource extends JsonResource
     public function toArray(Request $request): array
     {
         // return parent::toArray($request);
-        return [
+        /* return [
             'id' => $this->id,
             'name' => $this->name,
             'details' => $this->details,
             'status' => $this->status,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
-        ];
+        ]; */
+
+        return parent::toArray($request);
     }
 }

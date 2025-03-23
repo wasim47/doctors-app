@@ -13,6 +13,13 @@ class SpecialtyService {
         $this->repository = $repository;
     }
 
+    ////////////////// API ////////
+    public function getList(){
+
+        return $this->repository->getApiList();
+    }
+
+    ////////////////// Admin ////////
     public function index(){
 
         return $this->repository->getList();
@@ -21,21 +28,16 @@ class SpecialtyService {
 
     public function store($data){
 
-        $this->repository->create($data);
+        return $this->repository->create($data);
     }
 
-    public function find($data){
+    public function find($id){
 
-        $this->repository->create($data);
+        return $this->repository->find($id);
+
     }
 
     public function update($id, $data){
-
-        $this->repository->update($id, $data);
-    }
-
-    public function delete($id){
-
-        $this->repository->delete($id);
+        return $this->repository->update($id, $data);
     }
 }

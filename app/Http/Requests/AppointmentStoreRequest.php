@@ -3,27 +3,41 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function authorize()
     {
-        return false;
+        return Auth::guard('api')->check();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+    /* public function rules(): array
+    {
+        return [
+            'doctor_id' => ['required', 'integer', 'exists:doctors,id'],
+            'patient_id' => ['required', 'integer', 'exists:patients,id'],
+            'schedule_id' => ['required', 'integer', 'exists:schedules,id'],
+            'appointment_date' => ['required', 'date'],
+            'appointment_time' => ['required'],
+            'appointment_type' => ['required', 'string', 'max:255'],
+            'reason' => ['nullable', 'string'],
+            'serial_no' => ['required', 'integer'],
+            'appointment_status' => ['nullable', 'string', 'max:50'],
+            'payment_status' => ['required', 'string', 'max:255'],
+        ];
+    } */
+
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:150'],
-            'details' => ['nullable', 'string']
+            'doctor_id' => ['required', 'integer', 'exists:doctors,id'],
+            'patient_family_id' => ['nullable', 'integer', 'exists:patient_families,id'], // Check correct table
+            'schedule_id' => ['required', 'integer', 'exists:schedules,id'],
+            'shift_id' => ['required', 'integer', 'exists:shifts,id'],
+            'appointment_date' => ['required', 'date'],
+            'appointment_time' => ['required'],
         ];
     }
+
 }

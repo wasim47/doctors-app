@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\CancelationStoreRequest;
 use App\Http\Resources\CancelationResource;
 use App\Models\Cancelation;
 use App\Services\CancelationService;
 
-class CancelationController extends Controller
+class CancelationController extends BaseController
 {
 
     protected $service;

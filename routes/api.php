@@ -9,27 +9,31 @@ use App\Http\Controllers\api\v1\PatientController;
 use App\Http\Controllers\api\v1\ReviewController;
 use App\Http\Controllers\api\v1\ScheduleController;
 use App\Http\Controllers\api\v1\SpecialtyController;
+use App\Http\Controllers\api\v1\BranchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\v1\AuthController;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+use App\Http\Controllers\api\v1\ProfileController;
 
 
-Route::group(['prefix' => '/', 'namespace' => 'api\v1'], function($route) {
-    $route->post('register', [AuthController::class, 'register']);
-    $route->post('login', [AuthController::class, 'login']);
-    $route->get('user', [AuthController::class, 'getUser'])->middleware('jwt.auth');
-    $route->post('logout', [AuthController::class, 'logout'])->middleware('jwt.auth');
+/* Route::middleware(['auth:api'])->group(function () {
+    Route::get('profile', [ProfileController::class, 'profile']);
+    Route::post('profile-update', [ProfileController::class, 'profileUpdate']);
+    Route::post('change-password', [ProfileController::class, 'changePassword']);
+    Route::post('change-pin', [ProfileController::class, 'changePin']);
+    
+    Route::get('user', [AuthController::class, 'getUser']); // Correct syntax
+    Route::post('logout', [AuthController::class, 'logout']);
+}); */
 
+Route::controller(AuthController::class)->group(function($route){
 
-
-    /// ALl route related of appointment
-    $route->group(['prefix' => 'appointment'], function($route){
-        $route->get('/', [AppointmentController::class,'index']);
-    });
+    $route->post('email-verification','emailVerification');
+    $route->post('otp-verify','verifyOtp');
+    $route->post('registeration', 'register');
+    $route->post('login', 'login');
+    $route->post('email-exist-verification','forgetEmailVerification');
+    $route->post('reset-password','resetPassword');
 
     /// ALl route related of blog
     $route->group(['prefix' => 'blog'], function($route){
@@ -44,17 +48,13 @@ Route::group(['prefix' => '/', 'namespace' => 'api\v1'], function($route) {
     /// ALl route related of doctor
     $route->group(['prefix' => 'doctor'], function($route){
         $route->get('/', [DoctorController::class,'index']);
+        $route->get('/details/{id}', [DoctorController::class,'show']);
     });
 
     /// ALl route related of hospital
     $route->group(['prefix' => 'hospital'], function($route){
         $route->get('/', [HospitalController::class,'index']);
-    });
-
-    /// ALl route related of patient
-    $route->group(['prefix' => 'patient'], function($route){
-        $route->get('/', [PatientController::class,'index']);
-    });
+    });    
 
     /// ALl route related of review
     $route->group(['prefix' => 'review'], function($route){
@@ -69,5 +69,38 @@ Route::group(['prefix' => '/', 'namespace' => 'api\v1'], function($route) {
     /// ALl route related of speciality
     $route->group(['prefix' => 'speciality'], function($route){
         $route->get('/', [SpecialtyController::class,'index']);
+    });
+
+    $route->group(['prefix' => 'branch'], function($route){
+        $route->get('/', [BranchController::class,'index']);
+    });
+});
+
+
+Route::group(['prefix' => '/', 'middleware' => 'auth:api', 'namespace' => 'api\v1',], function($route) {
+
+    Route::get('profile', [ProfileController::class, 'profile']);
+    Route::post('profile-update', [ProfileController::class, 'profileUpdate']);
+    Route::post('change-password', [ProfileController::class, 'changePassword']);
+    Route::post('change-pin', [ProfileController::class, 'changePin']);
+    
+    Route::get('user', [AuthController::class, 'getUser']); // Correct syntax
+    Route::post('logout', [AuthController::class, 'logout']);
+
+    /// ALl route related of appointment    
+    $route->group(['prefix' => 'appointment'], function($route){
+        //$route->get('/upcomming', [AppointmentController::class,'index']);
+        $route->get('/{type}', [AppointmentController::class,'index']);
+        $route->get('/details/{id}', [AppointmentController::class,'show']);
+        $route->post('/submit', [AppointmentController::class,'store']);
+    });
+
+    $route->group(['prefix' => 'patient'], function($route){
+        $route->get('/familyList', [PatientController::class,'index']);
+        $route->post('/addFamily', [PatientController::class,'store']);
+        $route->post('/updateFamily/{id}', [PatientController::class,'updateFamily']);
+        $route->delete('/deleteFamily/{id}', [PatientController::class,'deleteFamily']);
+        $route->post('/restoreFamily/{id}', [PatientController::class,'restoreFamily']);
+        $route->delete('/forceDeleteFamily/{id}', [PatientController::class,'forceDeleteFamily']);
     });
 });
