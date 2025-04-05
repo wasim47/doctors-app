@@ -225,178 +225,206 @@
         );
         pie_chart.render();
 
-       
 
 
 
-        
- checked = false;
-function checkedAll() {
-if (checked == false){checked = true}else{checked = false}
-	for (var i = 0; i < document.getElementById('form_check').elements.length; i++){
-	  document.getElementById('form_check').elements[i].checked = checked;
-	}
-}
 
 
-function permissions(tables,status,statuscol){
-	var summeCode=document.getElementsByName("summe_code[]");
-	var j=0;
-	var dataval= new Array();
-	
-	for(var i=0; i < summeCode.length; i++){
-		if(summeCode[i].checked)
-		{
-			dataval[j]=summeCode[i].value;
-			j++;			
-		}		
-	}
-	if(dataval=="")
-	{
-		alert("Please check one or more!");
-		return false;
-	}
-	else{
-		var urls = "{{ url('admin/permissions') }}";			
-		var hrefdata = urls+"?approve_val="+dataval+"&&tablename="+tables+"&&status="+status+"&&statuscol="+statuscol;
-		window.location.href=hrefdata;
-	}	
-}
+        checked = false;
 
-function deletedata(patch,tables)
-{
-		var summeCode=document.getElementsByName("summe_code[]");
-		var j=0;
-		var dataval= new Array();
-		var furl = patch;
-		var imagedel = false;
-		for(var i=0; i < summeCode.length; i++){
-			if(summeCode[i].checked)
-			{
-				dataval[j]=summeCode[i].value;
-				j++;				
-			}			
-		}
-		if(dataval=="")
-		{
-			swal({
-			  title: "Unchecked credential!",
-			  text: "Please check one or more!",
-			  icon: "warning",
-			});
-			return false;
-		}
-		else{	
-
-			swal({
-			  title: 'Are you sure?',
-			  //type: 'warning',
-			  imageUrl: "{{ asset('assets/images/favicons/favicon.png') }}",
-			  confirmButtonText: 'Ok, Delete It',
-			  showCloseButton: true,
-  			  showCancelButton: true,
-			  text: "Do you want to Delete Selected Data !",
-			 // input: 'checkbox',
-			  //inputPlaceholder: ' Delete all Images for Selected Submission'
-			}).then((result) => {
-			  if (result.value) {
-				//swal({type: 'success', text: 'You have a bike!'});
-				imagedel = true;
-				$.ajax({
-					type: "GET",
-					url: furl,
-					data: {'id':dataval,'deletetype':'multiple','deleteimage':imagedel,'tablename':tables},
-					cache: false,
-					success: function(html) {
-						swal({
-						  title: "Successfully Delete!",
-						  text: "All selected data are deleted",
-						  type: "success",
-						});
-						 var len = html.length;
-						for(i in html){
-							 $("#tablerow" + html[i]).fadeOut('slow');
-						}				
-					 }					
-				});	
-			
-			  } else {
-				console.log('modal was dismissed by ${result.dismiss}')
-			  }
-			  
-		});
-	}
-}
-
-function deleteSingle(id,patch,tables){
-		
-		var furl = patch;
-		//alert(tables);
-		var imagedel = false;
-		
-			swal({
-			  imageUrl: "{{ asset('assets/images/favicons/favicon.png') }}",
-			  title: 'Are you sure?',			 
-			  confirmButtonText: 'Ok, Delete It',
-			  //type: 'warning',
-			  showCloseButton: true,
-  			  showCancelButton: true,
-			  text: "Do you want to Delete Selected data !",
-			  //input: 'checkbox',
-			  //inputPlaceholder: ' Delete all Images for Selected data'
-			}).then((result) => {
-			  if (result.value) {
-				//swal({type: 'success', text: 'You have a bike!'});
-				imagedel = true;
-				$.ajax({
-					type: "GET",
-					url: furl,
-					data: {'id':id,'deletetype':'single','deleteimage':imagedel,'tablename':tables},
-					cache: false,
-					success: function(html) {
-						swal({
-						  title: "Successfully Delete!",
-						  text: "All selected data are deleted",
-						  type: "success",
-						});
-						$("#tablerow" + id).fadeOut('slow');
-					 }					
-				});	
-			
-			  } else if (result.value === 0) {
-				//swal({type: 'error', text: "You don't have a bike :("});
-				imagedel = false;
-				$.ajax({
-					type: "GET",
-					url: furl,
-					data: {'id':id,'deletetype':'single','deleteimage':imagedel,'tablename':tables},
-					cache: false,
-					success: function(html) {
-						swal({
-						  title: "Successfully Delete!",
-						  text: "All selected Submission are deleted",
-						  type: "success",
-						});
-						$("#tablerow" + id).fadeOut('slow');			
-					 }					
-				});	
-			
-			  } else {
-				console.log('modal was dismissed by ${result.dismiss}')
-			  }
-			  
-		});
-	}
+        function checkedAll() {
+            if (checked == false) {
+                checked = true
+            } else {
+                checked = false
+            }
+            for (var i = 0; i < document.getElementById('form_check').elements.length; i++) {
+                document.getElementById('form_check').elements[i].checked = checked;
+            }
+        }
 
 
-    $('#days_of_weeks').select2({
-		placeholder: "Select an option",
-		allowClear: true
-	});
-    $('.select2Data').select2({
-		placeholder: "Select an option",
-		allowClear: true
-	});
+        function permissions(tables, status, statuscol) {
+            var summeCode = document.getElementsByName("summe_code[]");
+            var j = 0;
+            var dataval = new Array();
+
+            for (var i = 0; i < summeCode.length; i++) {
+                if (summeCode[i].checked) {
+                    dataval[j] = summeCode[i].value;
+                    j++;
+                }
+            }
+            if (dataval == "") {
+                alert("Please check one or more!");
+                return false;
+            } else {
+                var urls = "{{ url('admin/permissions') }}";
+                var hrefdata = urls + "?approve_val=" + dataval + "&&tablename=" + tables + "&&status=" + status + "&&statuscol=" + statuscol;
+                window.location.href = hrefdata;
+            }
+        }
+
+        function deletedata(patch, tables) {
+            var summeCode = document.getElementsByName("summe_code[]");
+            var j = 0;
+            var dataval = new Array();
+            var furl = patch;
+            var imagedel = false;
+            for (var i = 0; i < summeCode.length; i++) {
+                if (summeCode[i].checked) {
+                    dataval[j] = summeCode[i].value;
+                    j++;
+                }
+            }
+            if (dataval == "") {
+                swal({
+                    title: "Unchecked credential!",
+                    text: "Please check one or more!",
+                    icon: "warning",
+                });
+                return false;
+            } else {
+
+                swal({
+                    title: 'Are you sure?',
+                    //type: 'warning',
+                    imageUrl: "{{ asset('assets/images/favicons/favicon.png') }}",
+                    confirmButtonText: 'Ok, Delete It',
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    text: "Do you want to Delete Selected Data !",
+                    // input: 'checkbox',
+                    //inputPlaceholder: ' Delete all Images for Selected Submission'
+                }).then((result) => {
+                    if (result.value) {
+                        //swal({type: 'success', text: 'You have a bike!'});
+                        imagedel = true;
+                        $.ajax({
+                            type: "GET",
+                            url: furl,
+                            data: {
+                                'id': dataval,
+                                'deletetype': 'multiple',
+                                'deleteimage': imagedel,
+                                'tablename': tables
+                            },
+                            cache: false,
+                            success: function(html) {
+                                swal({
+                                    title: "Successfully Delete!",
+                                    text: "All selected data are deleted",
+                                    type: "success",
+                                });
+                                var len = html.length;
+                                for (i in html) {
+                                    $("#tablerow" + html[i]).fadeOut('slow');
+                                }
+                            }
+                        });
+
+                    } else {
+                        console.log('modal was dismissed by ${result.dismiss}')
+                    }
+
+                });
+            }
+        }
+
+        function deleteSingle(id, patch, tables) {
+
+            var furl = patch;
+            //alert(tables);
+            var imagedel = false;
+
+            swal({
+                imageUrl: "{{ asset('assets/images/favicons/favicon.png') }}",
+                title: 'Are you sure?',
+                confirmButtonText: 'Ok, Delete It',
+                //type: 'warning',
+                showCloseButton: true,
+                showCancelButton: true,
+                text: "Do you want to Delete Selected data !",
+                //input: 'checkbox',
+                //inputPlaceholder: ' Delete all Images for Selected data'
+            }).then((result) => {
+                if (result.value) {
+                    //swal({type: 'success', text: 'You have a bike!'});
+                    imagedel = true;
+                    $.ajax({
+                        type: "GET",
+                        url: furl,
+                        data: {
+                            'id': id,
+                            'deletetype': 'single',
+                            'deleteimage': imagedel,
+                            'tablename': tables
+                        },
+                        cache: false,
+                        success: function(html) {
+                            swal({
+                                title: "Successfully Delete!",
+                                text: "All selected data are deleted",
+                                type: "success",
+                            });
+                            $("#tablerow" + id).fadeOut('slow');
+                        }
+                    });
+
+                } else if (result.value === 0) {
+                    //swal({type: 'error', text: "You don't have a bike :("});
+                    imagedel = false;
+                    $.ajax({
+                        type: "GET",
+                        url: furl,
+                        data: {
+                            'id': id,
+                            'deletetype': 'single',
+                            'deleteimage': imagedel,
+                            'tablename': tables
+                        },
+                        cache: false,
+                        success: function(html) {
+                            swal({
+                                title: "Successfully Delete!",
+                                text: "All selected Submission are deleted",
+                                type: "success",
+                            });
+                            $("#tablerow" + id).fadeOut('slow');
+                        }
+                    });
+
+                } else {
+                    console.log('modal was dismissed by ${result.dismiss}')
+                }
+
+            });
+        }
+
+
+        $('#days_of_weeks').select2({
+            placeholder: "Select an option",
+            allowClear: true
+        });
+        $('.select2Data').select2({
+            placeholder: "Select an option",
+            allowClear: true
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            var cloneIndex = 0;
+            $("#addMore").click(function() {
+                cloneIndex++;
+                var clone = $("#cloneRow").clone().attr("id", "cloneRow" + cloneIndex);
+                clone.append($('<td><a class="btn btn-danger btn-sm" id="removeRow' + cloneIndex + '" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>'))
+                    .appendTo("#itemTableData");
+
+                $("#removeRow" + cloneIndex).click(function() {
+                    $(this).closest("tr").remove();
+                });
+            });
+        });
     </script>
 </body>
 

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Doctor;
 use App\Models\DoctorBranch;
+use App\Models\DoctorExperience;
 use App\Models\DoctorSpeciality;
 use App\Repositories\DoctorRepositoryInterface;
 use DateInterval;
@@ -65,8 +66,21 @@ class DoctorRepository implements DoctorRepositoryInterface
 
     public function findApp($id)
     {
+        $iconPath = asset('uploads/doctor');
+        $defaultMalePhoto = asset('assets/img/doctor-male.png');
+        $defaultFemalePhoto = asset('assets/img/doctor-female.png');
+
         $doctor = Doctor::with('specialities:id,name', 'branches:id,name', 'schedule:id,doctor_id,days_of_weeks', 'schedule.shift:id,schedule_id,shift,start_time,end_time,minutes_per_appointment,maximum_patients')
-            ->select('id', 'first_name', 'last_name', 'designation', 'degree', 'regular_fee')
+            ->select('id', 'first_name', 'last_name', 'designation', 'degree', 'regular_fee', DB::raw("
+            COALESCE(
+                CONCAT('$iconPath/', image), 
+                CASE 
+                    WHEN gender = 'Male' THEN '$defaultMalePhoto' 
+                    WHEN gender = 'Female' THEN '$defaultFemalePhoto' 
+                    ELSE '$defaultMalePhoto' 
+                END
+            ) AS doctor_photo
+        "))
             ->whereNull('deleted_at')
             ->where('id', $id)
             ->first();
@@ -83,6 +97,36 @@ class DoctorRepository implements DoctorRepositoryInterface
                     $shift->times =  $time_slots;
                 }
             }
+        }
+
+        return $doctor;
+    }
+
+
+    public function doctorProfile($id)
+    {
+        $iconPath = asset('uploads/doctor');
+        $defaultMalePhoto = asset('assets/img/doctor-male.png');
+        $defaultFemalePhoto = asset('assets/img/doctor-female.png');
+
+        $doctor = Doctor::with('specialities:id,name', 'experience:id,doctor_id,hospital_name,designation,start_date,end_date', 'hospital:id,name')
+            ->select('id', 'first_name', 'last_name', 'hospital_id', 'designation', 'degree', 'experience AS totalExperience','about','bmdc',
+            DB::raw("
+                COALESCE(
+                    CONCAT('$iconPath/', image), 
+                    CASE 
+                        WHEN gender = 'Male' THEN '$defaultMalePhoto' 
+                        WHEN gender = 'Female' THEN '$defaultFemalePhoto' 
+                        ELSE '$defaultMalePhoto' 
+                    END
+                ) AS doctor_photo
+            "))
+            ->whereNull('deleted_at')
+            ->where('id', $id)
+            ->first();
+
+        if (!$doctor) {
+            return response()->json(['error' => 'Doctor not found'], 404);
         }
 
         return $doctor;
@@ -158,6 +202,23 @@ class DoctorRepository implements DoctorRepositoryInterface
                 ];
             }
             DoctorSpeciality::insert($doctorSpecialities);
+        }
+
+        if (!empty($data['exp_designation']) && count($data['exp_designation']) > 0) {
+            $doctorExperience = [];
+            foreach ($data['exp_designation'] as $index => $item) {
+                $doctorExperience[] = [
+                    'doctor_id' => $doctor->id,
+                    'designation' => $data['exp_designation'][$index],
+                    'hospital_name' => $data['exp_hospital_name'][$index],
+                    'start_date' => $data['exp_start_date'][$index],
+                    'end_date' => $data['exp_end_date'][$index],
+                    'status' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+            DoctorExperience::insert($doctorExperience);
         }
 
         if (!empty($data['branch_id']) && count($data['branch_id']) > 0) {

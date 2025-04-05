@@ -42,4 +42,12 @@ class Doctor extends Model
     public function schedule(){
         return $this->hasMany(Schedule::class, 'doctor_id', 'id');
     }
+
+    public function experience(){
+        return $this->hasMany(DoctorExperience::class, 'doctor_id', 'id');
+    }
+
+    public function hospital(){
+        return $this->belongsTo(Hospital::class, 'hospital_id');
+    }
 }

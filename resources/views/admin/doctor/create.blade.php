@@ -226,6 +226,35 @@
                             </div>                            
                         </div>
 
+                        <div class="row">
+                                    <div class="col-sm-12 pull-right d-flex justify-content-end mb-2">
+                                        <label for="name">Add more experience
+                                            <a href="javascript:void(0)" id="addMore" class="btn btn-success btn-sm"><i class="fa fa-plus"></i></a>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-12">                                            
+                                        <table cellpadding="0" cellspacing="0" class="table table-bordered" id="itemTableData">
+                                            <thead>
+                                                <tr>
+                                                    <td> Designation</td>
+                                                    <td> Hospital</td>
+                                                    <td> From</td>
+                                                    <td> To</td>
+                                                    <td> Remove</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="cloneRow">
+                                                    <td><input type="text" class="form-control" placeholder="Enter Designation" id="exp_designation" name="exp_designation[]" required></td>
+                                                    <td><input type="text" class="form-control" placeholder="Enter Hospital Name" id="exp_hospital_name" name="exp_hospital_name[]" required></td>
+                                                    <td><input type="date" class="form-control" placeholder="From Date" id="exp_start_date" name="exp_start_date[]" required></td>
+                                                    <td><input type="date" class="form-control" placeholder="To Date" id="exp_end_date" name="exp_end_date[]" required></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
                         <div class="card-footer"> <button type="submit" class="btn btn-success">Submit</button> </div>
                     </div>
                 </form>
@@ -234,5 +263,6 @@
     </main>
     @include('admin/layouts.footer')
 </div>
+
 
 @endsection

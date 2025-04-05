@@ -26,6 +26,12 @@ class DoctorService {
         return $data;
     }
 
+    public function doctorProfile($id){
+
+        $data = $this->repository->doctorProfile($id);
+        return $data;
+    }
+
 
     ////////////////// Admin ////////
     public function index(){

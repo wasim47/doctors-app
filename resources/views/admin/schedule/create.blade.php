@@ -56,6 +56,19 @@
                             </div>
 
                             <div class="input-group mb-3 row">
+                                <label for="branch_id" class="col-md-3 col-form-label text-md-right">{{ __('Branch') }}</label>
+                                <div class="col-md-8">
+                                    <select name="branch_id" class="form-control select2Data">
+                                        <option value="">Select Branch</option>
+                                        @foreach($branchList as $branch)
+                                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('branch_id') <span style="color: red;">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3 row">
                                 <label for="days_of_weeks" class="col-md-3 col-form-label text-md-right">Days of Week</label>
                                 <div class="col-md-8">
                                     <select name="days_of_weeks" class="form-control" required>

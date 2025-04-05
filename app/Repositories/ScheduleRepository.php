@@ -21,6 +21,7 @@ class ScheduleRepository implements ScheduleRepositoryInterface {
     public function create($data){
         $schedule = Schedule::create([
             'doctor_id' => $data['doctor_id'] ?? null,
+            'branch_id' => $data['branch_id'] ?? null,
             'days_of_weeks' => $data['days_of_weeks'] ?? null,            
             'status' => $data['status'] ?? 1,
             'created_by' => $data['created_by'] ?? 1,

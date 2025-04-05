@@ -23,7 +23,8 @@ class ScheduleController extends BaseController
     public function create()
     {
         $doctorList = $this->commonService->doctorList();
-        return view('admin.schedule.create', compact('doctorList'));
+        $branchList = $this->commonService->branchList();
+        return view('admin.schedule.create', compact('doctorList','branchList'));
     }
 
     public function store(Request $request)

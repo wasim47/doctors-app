@@ -30,6 +30,11 @@ class DoctorController extends BaseController
         return $this->successResponse($this->service->findApp($id), 'Doctor Details', Response::HTTP_OK);
     }
 
+    public function profile($id = null){
+        
+        return $this->successResponse($this->service->doctorProfile($id), 'Doctor Profile', Response::HTTP_OK);
+    }
+
 
     // Add new specialty with custom validation rules
     public function store(DoctorStoreRequest $request){

@@ -49,6 +49,7 @@ Route::controller(AuthController::class)->group(function($route){
     $route->group(['prefix' => 'doctor'], function($route){
         $route->get('/', [DoctorController::class,'index']);
         $route->get('/details/{id}', [DoctorController::class,'show']);
+        $route->get('/profile/{id}', [DoctorController::class,'profile']);
     });
 
     /// ALl route related of hospital
