@@ -29,16 +29,22 @@ class AppointmentRepository implements AppointmentRepositoryInterface
             ->select('id', 'doctor_id', 'patient_id', 'appointment_date', 'appointment_time')
             ->where('patient_id', $getPatientID->id);
 
+            
         if ($type != 'all') {
             if ($type == 'upcomming') {
-                $query->where('appointment_date', '>=', date('Y-m-d'));
-            } else {
+                $now = now()->format('Y-m-d H:i:s');
+                $query->whereRaw("STR_TO_DATE(CONCAT(appointment_date, ' ', appointment_time), '%Y-%m-%d %H:%i:%s') >= ?", [$now]);
+            }
+            else {
                 $query->where('appointment_status', ucfirst($type));
             }
         }
 
+        /* dd(
+            $query->toSql(),
+            $query->getBindings()
+        ); */
         $appointment = $query->get();
-
         return $appointment;
     }
 

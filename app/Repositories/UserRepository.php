@@ -12,7 +12,7 @@ class UserRepository implements UserRepositoryInterface
     ////////////////// Admin ////////
     public function index()
     {
-        return User::orderBy('id', 'desc')->paginate(50);
+        return User::with('roles:id,name')->orderBy('id', 'desc')->paginate(50);
     }
 
     public function create($data)
@@ -27,15 +27,16 @@ class UserRepository implements UserRepositoryInterface
             'gender' => $data['gender'] ?? null,
             'status' => 1,
             'password' => bcrypt('patient-1234'),
-            'user_type' =>$data['user_type'],
+            'user_type' => $data['user_type'],
             'created_by' => $data['created_by'] ?? 1,
             'updated_by' => $data['updated_by'] ?? null,
         ]);
+        $user->syncRoles($data['roles']);
 
         return $user;
     }
 
-    
+
 
     public function find($id)
     {
@@ -43,24 +44,32 @@ class UserRepository implements UserRepositoryInterface
     }
 
 
-    
+
 
     public function update($id, array $data)
     {
-        $patientData = User::find($id);
-        $menuUpdate = array(
-            'first_name' => $data['first_name'] ?? '',
-            'last_name' => $data['last_name'] ?? '',
-            'date_of_birth' => $data['date_of_birth'] ?? null,
-            'email' => $data['email'] ?? '',
-            'phone_no' => $data['phone_no'] ?? '',
-            'gender' => $data['gender'] ?? null,
-            'status' => $data['status'] ?? 1,
-            'updated_at' => date('Y-m-d H:i:s')
-        );
+        $patientData = User::findOrFail($id);
 
-        return $patientData->update($menuUpdate);
+        $menuUpdate = [
+            'first_name'    => $data['first_name'] ?? '',
+            'last_name'     => $data['last_name'] ?? '',
+            'date_of_birth' => $data['date_of_birth'] ?? null,
+            'email'         => $data['email'] ?? '',
+            'phone_no'      => $data['phone_no'] ?? '',
+            'gender'        => $data['gender'] ?? null,
+            'status'        => $data['status'] ?? 1,
+            'updated_at'    => now()
+        ];
+
+        // First update the user
+        $patientData->update($menuUpdate);
+
+        // Then sync roles after update
+        $patientData->syncRoles($data['roles']);
+
+        return true;
     }
+
 
     public function deleteUser($id)
     {

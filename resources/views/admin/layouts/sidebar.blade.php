@@ -195,6 +195,67 @@
 
                     </ul>
                 </li>
+
+                <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
+                        <p>Role<i class="nav-arrow bi bi-chevron-right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('roles.index') }}" class="nav-link">
+                                <i class="nav-icon bi bi-list"></i>
+                                <p>Role List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('roles.create') }}" class="nav-link">
+                                <i class="nav-icon bi bi-plus-circle"></i>
+                                <p>New Role</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
+                        <p>Permission<i class="nav-arrow bi bi-chevron-right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('permission.index') }}" class="nav-link">
+                                <i class="nav-icon bi bi-list"></i>
+                                <p>Permission List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('permission.create') }}" class="nav-link">
+                                <i class="nav-icon bi bi-plus-circle"></i>
+                                <p>New Permission</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+
+                <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
+                        <p>Assign Permission<i class="nav-arrow bi bi-chevron-right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('roles.permissions.assign') }}" class="nav-link">
+                                <i class="nav-icon bi bi-list"></i>
+                                <p>Assign Permission to Roles</p>
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a href="{{ route('permission.create') }}" class="nav-link">
+                                <i class="nav-icon bi bi-plus-circle"></i>
+                                <p>Assign Permission to Direct User</p>
+                            </a>
+                        </li> -->
+
+                    </ul>
+                </li>
             </ul>
         </nav>
     </div>

@@ -41,6 +41,7 @@
                                                 <th>Email</th>
                                                 <th>Gender</th>
                                                 <th>DOB</th>
+                                                <th>Role</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -55,6 +56,7 @@
                                                 <td>{{ $data->email }}</td>
                                                 <td>{{ $data->gender }}</td>
                                                 <td>{{ $data->date_of_birth }}</td>
+                                                <td>{{ $data->getRoleNames()->implode(', ') }}</td>
                                                 <td>
                                                     {!! $data->status ? '<span class="badge text-bg-success">Active</span>' : '<span class="badge text-bg-danger">Inactive</span>' !!}
                                                 </td>

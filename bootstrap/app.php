@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.admin' => \App\Http\Middleware\AdminAuthenticate::class,  // Admin authentication
             'auth.user' => \App\Http\Middleware\UserAuthenticate::class,    // User authentication
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

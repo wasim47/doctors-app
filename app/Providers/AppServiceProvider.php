@@ -28,26 +28,7 @@ use App\Repositories\CommonRepository;
 use App\Repositories\CommonRepositoryInterface;
 use App\Repositories\UserRepositoryInterface;
 use App\Repositories\UserRepository;
-
-// All dependency for Admin
-/* use App\Repositories\Admin\AdminAppointmentRepository;
-use App\Repositories\Admin\AdminAppointmentRepositoryInterface;
-use App\Repositories\Admin\AdminSpecialtyRepository;
-use App\Repositories\Admin\AdminSpecialtyRepositoryInterface;
-use App\Repositories\Admin\AdminBlogRepository;
-use App\Repositories\Admin\AdminBlogRepositoryInterface;
-use App\Repositories\Admin\AdminDoctorRepository;
-use App\Repositories\Admin\AdminDoctorRepositoryInterface;
-use App\Repositories\Admin\AdminPatientRepository;
-use App\Repositories\Admin\AdminPatientRepositoryInterface;
-use App\Repositories\Admin\AdminScheduleRepository;
-use App\Repositories\Admin\AdminScheduleRepositoryInterface;
-use App\Repositories\Admin\AdminReviewRepository;
-use App\Repositories\Admin\AdminReviewRepositoryInterface;
-use App\Repositories\Admin\AdminCancelationRepository;
-use App\Repositories\Admin\AdminCancelationRepositoryInterface;
-use App\Repositories\Admin\AdminHospitalRepository;
-use App\Repositories\Admin\AdminHospitalRepositoryInterface; */
+use App\Services\UtilityService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -69,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(BranchRepositoryInterface::class, BranchRepository::class);
         $this->app->bind(CommonRepositoryInterface::class, CommonRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(UtilityService::class);
     }
 
     /**

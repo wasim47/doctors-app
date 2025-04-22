@@ -11,6 +11,10 @@ use App\Http\Controllers\admin\DoctorController;
 use App\Http\Controllers\admin\PatientController;
 use App\Http\Controllers\admin\ScheduleController;
 use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\admin\RoleController;
+use App\Http\Controllers\admin\PermissionController;
+use App\Http\Controllers\admin\RolePermissionController;
+use App\Http\Controllers\admin\UserRoleController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'showLogin'])->name('admin.login');
@@ -30,7 +34,26 @@ Route::prefix('admin')->middleware('auth:administration')->group(function () {
     Route::resource('patient', PatientController::class);
     Route::resource('user', UserController::class);
     Route::resource('schedule', ScheduleController::class);
+    Route::resource('roles', RoleController::class);
+    Route::resource('permission', PermissionController::class);
 
+    // web.php
+    // Load the page
+    Route::get('/assign-role-permissions', [RolePermissionController::class, 'assignPermissions'])->name('roles.permissions.assign');
+
+    // Fetch permissions by module (AJAX)
+    Route::get('/get-permissions-by-module/{module}', [RolePermissionController::class, 'getPermissionsByModule'])->name('permissions.byModule');
+
+    // Store assigned permissions
+    Route::post('/assign-role-permissions', [RolePermissionController::class, 'saveAssignedPermissions'])->name('roles.permissions.save');
+
+
+    /*  Route::get('role-permissions/{role}', [RolePermissionController::class, 'edit'])->name('role-permissions.edit');
+    Route::post('role-permissions/{role}', [RolePermissionController::class, 'update'])->name('role-permissions.update');
+
+    Route::get('user-roles/{user}', [UserRoleController::class, 'edit'])->name('user-roles.edit');
+    Route::post('user-roles/{user}', [UserRoleController::class, 'update'])->name('user-roles.update');
+ */
 
     Route::any('permissions', [CommonController::class, 'permissions'])->name('permissions');
     Route::get('update-slug', [CommonController::class, 'updateSlug']);

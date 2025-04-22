@@ -56,20 +56,8 @@
     </script> <!--end::OverlayScrollbars Configure--> <!-- OPTIONAL SCRIPTS --> <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js" integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
     <script>
-        // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-        // IT'S ALL JUST JUNK FOR DEMO
-        // ++++++++++++++++++++++++++++++++++++++++++
-
-        /* apexcharts
-         * -------
-         * Here we will create a few charts using apexcharts
-         */
-
-        //-----------------------
-        // - MONTHLY SALES CHART -
-        //-----------------------
-
-        const sales_chart_options = {
+        
+        /* const sales_chart_options = {
             series: [{
                     name: "Digital Goods",
                     data: [28, 48, 40, 19, 86, 27, 90],
@@ -223,7 +211,7 @@
             document.querySelector("#pie-chart"),
             pie_chart_options,
         );
-        pie_chart.render();
+        pie_chart.render(); */
 
 
 
@@ -426,6 +414,8 @@
             });
         });
     </script>
+
+@yield('page-script')
 </body>
 
 </html>

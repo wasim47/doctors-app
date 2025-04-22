@@ -59,7 +59,20 @@
                                     @error('user_type') <span style="color: red;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
-                            
+
+                            <div class="input-group mb-3 row">
+                                <label for="user_type" class="col-md-3 col-form-label text-md-right">{{ __('Roles') }}</label>
+                                <div class="col-md-8">
+                                    @foreach ($roles as $role)
+                                    <div>
+                                        <input type="checkbox" name="roles[]" value="{{ $role->name }}">
+                                        {{ $role->name }}
+                                    </div>
+                                    @endforeach
+                                    @error('roles') <span style="color: red;">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
                             <div class="input-group mb-3 row">
                                 <label for="phone_no" class="col-md-3 col-form-label text-md-right">{{ __('Phone No') }}</label>
                                 <div class="col-md-8">
@@ -75,7 +88,7 @@
                                 </div>
                             </div>
 
-                           
+
                             <div class="input-group mb-3 row">
                                 <label for="gender" class="col-md-3 col-form-label text-md-right">{{ __('Gender') }}</label>
                                 <div class="col-md-8">
@@ -97,7 +110,15 @@
                                 </div>
                             </div>
 
-                            
+                            <div class="input-group mb-3 row">
+                                <label for="date_of_birth" class="col-md-3 col-form-label text-md-right">{{ __('Password') }}</label>
+                                <div class="col-md-8">
+                                    <input id="password" type="password" class="form-control" name="password" value="{{ old('password') }}" required>
+                                    @error('password') <span style="color: red;">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+
                             <div class="input-group mb-3 row">
                                 <label for="status" class="col-md-3 col-form-label text-md-right">{{ __('Status') }}</label>
                                 <div class="col-md-8">
