@@ -42,6 +42,7 @@ class ProfileController extends BaseController
                     'first_name' => 'required|string|max:255',
                     'last_name' => 'required|string|max:255',
                     'mobile' => 'required|numeric|digits_between:1,20',
+                    'country_code' => 'required',
                     'gender' => 'required|in:Male,Female,Other,Not Declare',
                     'country' => 'nullable|string|max:255',
                     'city' => 'nullable|string|max:255',
@@ -66,6 +67,7 @@ class ProfileController extends BaseController
                     'last_name' => $request['last_name'],
                     'gender' => $request['gender'],
                     'mobile' => $request['mobile'],
+                    'country_code' => $request['country_code'],
                     'country' => $request['country'],
                     'city' => $request['city'],
                     'area' => $request['area'],
@@ -94,13 +96,17 @@ class ProfileController extends BaseController
                     'last_name' => $request['last_name'],
                     'gender' => $request['gender'],
                     'phone_no' => $request['mobile'],
+                    'country_code' => $request['country_code'],
                     'date_of_birth' => $request['dob'],
                 ];
                 Patient::where('user_id', $user->id)->update($updatePatientData);
+                $updatedPatient = User::where('id', $user->id)->first();
+                $updatedPatient->makeHidden(['id', 'created_at', 'updated_at', 'created_by', 'updated_by','deleted_at','email_verified_at','is_email_verify','status','user_type']);
 
                 return response()->json([
                     'message' => 'Profile updated successfully.',
                     'success' => true,
+                    'data' => $updatedPatient,
                 ], 200);
             } catch (\Exception $e) {
                 return response()->json([

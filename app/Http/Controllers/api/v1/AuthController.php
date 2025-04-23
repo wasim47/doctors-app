@@ -125,6 +125,7 @@ class AuthController extends BaseController
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users|max:255',
             'mobile' => 'required|unique:users|max:255',
+            'country_code' => 'required',
             'password' => 'required|min:8|confirmed',
         ]);
 
@@ -141,6 +142,7 @@ class AuthController extends BaseController
             'name' => $request->input('first_name') . ' ' . $request->input('last_name'),
             'email' => $request->input('email'),
             'mobile' => $request->input('mobile'),
+            'country_code' => $request->input('country_code'),
             'status' => 1,
             'user_type' => 'Patient',
             'password' => bcrypt($request->input('password')),
@@ -151,6 +153,8 @@ class AuthController extends BaseController
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'phone_no' => $request->input('mobile'),
+            'country_code' => $request->input('country_code'),
+            'blood_group' => $request->input('blood_group'),
             'status' => 1,
             'user_id' => $user->id,
         ]);
@@ -161,7 +165,7 @@ class AuthController extends BaseController
             'message' => 'User registered successfully.',
             'data' => [
                 'token' => $token,
-                'user' => ['name' => $user->name, 'email' => $user->email, 'mobile' => $user->mobile],
+                'user' => ['name' => $user->name, 'email' => $user->email, 'mobile' => $user->mobile,'country_code' => $user->country_code],
             ]
         ], 200);
     }

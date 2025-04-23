@@ -24,14 +24,14 @@ class AppointmentService {
         return $this->repository->create($data);
     }
 
+    /* public function reschedule($id, $data){
+
+        return $this->repository->update($id, $data);
+    } */
+
     public function find($id){
 
         return $this->repository->find($id);
-    }
-
-    public function update($id, $data){
-
-        $this->repository->update($id, $data);
     }
 
     public function delete($id){

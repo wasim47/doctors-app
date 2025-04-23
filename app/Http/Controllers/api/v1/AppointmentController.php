@@ -34,6 +34,7 @@ class AppointmentController extends BaseController
         try {
             $validatedData = $request->validated();
             $appointment = $this->service->store($validatedData);
+
             if($appointment){
                 return response()->json([
                     'success' => true,
@@ -61,6 +62,40 @@ class AppointmentController extends BaseController
             ], 500);
         }
     }
+
+
+    /* public function reschedule($id, AppointmentStoreRequest $request)
+    {
+        try {
+            $validatedData = $request->validated();
+            $appointment = $this->service->reschedule($id, $validatedData);
+            if($appointment){
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Appointment created successfully',
+                    'data' => $appointment
+                ], 201);
+            }
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 422);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    } */
 
     public function cancelAppointment($id)
     {
