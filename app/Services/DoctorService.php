@@ -26,6 +26,11 @@ class DoctorService {
         return $data;
     }
 
+    public function doctorSchedule($doctorId, $scheduleId, $appointment_date){
+        $data = $this->repository->doctorSchedule($doctorId, $scheduleId, $appointment_date);
+        return $data;
+    }
+
     public function doctorProfile($id){
 
         $data = $this->repository->doctorProfile($id);

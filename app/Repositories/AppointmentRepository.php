@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Repositories\AppointmentRepositoryInterface;
+use App\Services\UtilityService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,31 +20,26 @@ class AppointmentRepository implements AppointmentRepositoryInterface
 
         $auth = Auth::guard('api');
         $getPatientID = Patient::select('id')->where('user_id', $auth->user()->id)->first();
-
         if (!$getPatientID) {
             return false;
         }
-
-
+        
         $query = Appointment::with('doctor:id,first_name,last_name,degree,designation', 'doctor.specialities:id,name')
-            ->select('id', 'doctor_id', 'patient_id', 'appointment_date', 'appointment_time')
+            ->select('id', 'doctor_id', 'patient_id', 'appointment_date', 'appointment_time','appointment_status')
             ->where('patient_id', $getPatientID->id);
 
             
         if ($type != 'all') {
             if ($type == 'upcomming') {
                 $now = now()->format('Y-m-d H:i:s');
+                $query->where('appointment_status', UtilityService::$appointmentStatus['pending']);
                 $query->whereRaw("STR_TO_DATE(CONCAT(appointment_date, ' ', appointment_time), '%Y-%m-%d %H:%i:%s') >= ?", [$now]);
             }
             else {
                 $query->where('appointment_status', ucfirst($type));
             }
         }
-
-        /* dd(
-            $query->toSql(),
-            $query->getBindings()
-        ); */
+        
         $appointment = $query->get();
         return $appointment;
     }

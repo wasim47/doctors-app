@@ -15,7 +15,7 @@ class PatientRepository implements PatientRepositoryInterface
     public function getFamilyList()
     {
         $auth = Auth::guard('api');
-        return PatientFamily::where('patient_id', $auth->user()->id)->select('id', 'first_name', 'last_name', 'relation', 'phone_no', 'email', 'gender', 'date_of_birth')->get();
+        return PatientFamily::where('patient_id', $auth->user()->id)->select('id', 'first_name', 'last_name', 'relation', 'country_code','phone_no', 'email', 'gender', 'date_of_birth')->get();
     }
 
     ////////////////// Admin ////////
@@ -33,6 +33,7 @@ class PatientRepository implements PatientRepositoryInterface
             'name' => $data['first_name'] . ' ' . $data['last_name'],
             'dob' => $data['date_of_birth'] ?? null,
             'email' => $data['email'] ?? '',
+            'country_code' => $data['country_code'] ?? '',
             'mobile' => $data['phone_no'] ?? '',
             'gender' => $data['gender'] ?? null,
             'status' => 1,
@@ -47,6 +48,7 @@ class PatientRepository implements PatientRepositoryInterface
             'last_name' => $data['last_name'] ?? '',
             'date_of_birth' => $data['date_of_birth'] ?? null,
             'email' => $data['email'] ?? '',
+            'country_code' => $data['country_code'] ?? '',
             'phone_no' => $data['phone_no'] ?? '',
             'gender' => $data['gender'] ?? null,
             'status' => $data['status'] ?? 1,
@@ -68,6 +70,7 @@ class PatientRepository implements PatientRepositoryInterface
             'date_of_birth' => $data['dob'] ?? null,
             'email' => $data['email'] ?? '',
             'relation' => $data['relation'] ?? '',
+            'country_code' => $data['country_code'] ?? '',
             'phone_no' => $data['mobile'] ?? '',
             'gender' => $data['gender'] ?? null,
             'status' => 1,
@@ -101,6 +104,7 @@ class PatientRepository implements PatientRepositoryInterface
             'date_of_birth' => $data['dob'] ?? null,
             'email' => $data['email'] ?? '',
             'relation' => $data['relation'] ?? '',
+            'country_code' => $data['country_code'] ?? '',
             'phone_no' => $data['mobile'] ?? '',
             'gender' => $data['gender'] ?? null,
             'status' => 1, // Ensure this is needed
@@ -125,6 +129,7 @@ class PatientRepository implements PatientRepositoryInterface
             'last_name' => $data['last_name'] ?? '',
             'date_of_birth' => $data['date_of_birth'] ?? null,
             'email' => $data['email'] ?? '',
+            'country_code' => $data['country_code'] ?? '',
             'phone_no' => $data['phone_no'] ?? '',
             'gender' => $data['gender'] ?? null,
             'status' => $data['status'] ?? 1,

@@ -29,6 +29,11 @@ class DoctorController extends BaseController
         return $this->successResponse($this->service->findApp($id,$appointment_date), 'Doctor Details', Response::HTTP_OK);
     }
 
+    public function doctorSchedule($doctorId, $scheduleId, $appointment_date){
+        return $this->service->doctorSchedule($doctorId, $scheduleId, $appointment_date);
+        return $this->successResponse($this->service->doctorSchedule($doctorId, $scheduleId, $appointment_date), 'Doctor Details', Response::HTTP_OK);
+    }
+
     public function profile($id = null){
         
         return $this->successResponse($this->service->doctorProfile($id), 'Doctor Profile', Response::HTTP_OK);
