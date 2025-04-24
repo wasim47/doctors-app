@@ -20,9 +20,9 @@ class DoctorService {
     }
 
 
-    public function findApp($id){
+    public function findApp($id, $appointment_date = null){
 
-        $data = $this->repository->findApp($id);
+        $data = $this->repository->findApp($id, $appointment_date);
         return $data;
     }
 

@@ -25,9 +25,8 @@ class DoctorController extends BaseController
         return $this->successResponse(DoctorResource::collection($this->service->getList($request->all())), 'All Doctor List', Response::HTTP_OK);
     }
 
-    public function show($id = null){
-        
-        return $this->successResponse($this->service->findApp($id), 'Doctor Details', Response::HTTP_OK);
+    public function show($id = null, $appointment_date = null){
+        return $this->successResponse($this->service->findApp($id,$appointment_date), 'Doctor Details', Response::HTTP_OK);
     }
 
     public function profile($id = null){

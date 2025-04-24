@@ -2,11 +2,13 @@
 
 namespace App\Repositories;
 
+use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\DoctorBranch;
 use App\Models\DoctorExperience;
 use App\Models\DoctorSpeciality;
 use App\Repositories\DoctorRepositoryInterface;
+use App\Services\UtilityService;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -14,7 +16,9 @@ use Illuminate\Support\Facades\DB;
 
 class DoctorRepository implements DoctorRepositoryInterface
 {
-
+    public function __construct(
+        protected UtilityService  $utility
+    ) {}
     public function getApiList($data)
     {
         $iconPath = asset('uploads/doctor');
@@ -64,7 +68,7 @@ class DoctorRepository implements DoctorRepositoryInterface
             ->get();
     }
 
-    public function findApp($id)
+    public function findApp($id, $appointment_date = null)
     {
         $iconPath = asset('uploads/doctor');
         $defaultMalePhoto = asset('assets/img/doctor-male.png');
@@ -93,7 +97,7 @@ class DoctorRepository implements DoctorRepositoryInterface
         foreach ($doctor->schedule as $schedule) {
             foreach ($schedule->shift as $shed) {
                 foreach ($schedule->shift as $shift) {
-                    $time_slots = $this->generateTime($shift->start_time, $shift->end_time, $shift->minutes_per_appointment);
+                    $time_slots = $this->generateTime($shift, $id, $appointment_date);
                     $shift->times =  $time_slots;
                 }
             }
@@ -132,8 +136,14 @@ class DoctorRepository implements DoctorRepositoryInterface
         return $doctor;
     }
 
-    function generateTime($start_time, $end_time, $interval_minutes)
+    function generateTime($shift, $doctor_id, $appointment_date)
     {
+        $start_time = $shift->start_time;
+        $end_time = $shift->end_time;
+        $interval_minutes = $shift->minutes_per_appointment;
+        $shiftId = $shift->id;
+        $scheduleId = $shift->schedule_id;
+
         $time_slots = [];
 
         // Convert start and end times to timestamps
@@ -145,10 +155,22 @@ class DoctorRepository implements DoctorRepositoryInterface
             return ["Invalid time format"];
         }
 
-        // Generate time slots
+        $bookedAppointments = Appointment::where([
+            ['doctor_id', $doctor_id],
+            ['schedule_id', $scheduleId],
+            ['shift_id', $shiftId],
+            ['appointment_date', $appointment_date],
+            ['appointment_status', $this->utility::$appointmentStatus['pending']],
+        ])->pluck('appointment_time')->toArray();
+        
+        // Step 2: Build time slots without querying inside loop
+        $time_slots = [];
+        
         while ($start <= $end) {
-            $time_slots[] = date("H:i", $start); // Format as HH:MM
-            $start += $interval_minutes * 60; // Add interval in seconds
+            $time = date("H:i", $start);
+            $isBooked = in_array($time, $bookedAppointments) ? 1 : 0;
+            $time_slots[] = ['time' => $time, 'isBooked' => $isBooked];
+            $start += $interval_minutes * 60;
         }
 
         return $time_slots;

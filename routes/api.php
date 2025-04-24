@@ -48,7 +48,7 @@ Route::controller(AuthController::class)->group(function($route){
     /// ALl route related of doctor
     $route->group(['prefix' => 'doctor'], function($route){
         $route->get('/', [DoctorController::class,'index']);
-        $route->get('/details/{id}', [DoctorController::class,'show']);
+        $route->get('/details/{id}/{appointment_date?}', [DoctorController::class,'show']);
         $route->get('/profile/{id}', [DoctorController::class,'profile']);
     });
 
