@@ -90,7 +90,6 @@ Route::group(['prefix' => '/', 'middleware' => 'auth:api', 'namespace' => 'api\v
 
     /// ALl route related of appointment    
     $route->group(['prefix' => 'appointment'], function($route){
-        //$route->get('/upcomming', [AppointmentController::class,'index']);
         $route->get('/{type}', [AppointmentController::class,'index']);
         $route->get('/details/{id}', [AppointmentController::class,'show']);
         $route->post('/submit', [AppointmentController::class,'store']);
