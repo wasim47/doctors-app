@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\DB;
 class AppointmentRepository implements AppointmentRepositoryInterface
 {
 
-
+    public function __construct(
+        protected UtilityService  $utility
+    ) {}
     /********** For APP Api  */
     public function getList($type)
     {
@@ -58,12 +60,12 @@ class AppointmentRepository implements AppointmentRepositoryInterface
             $existingAppintment = Appointment::where([['id',$data['appointment_id']],['patient_id', $getPatientID->id]])->first();
         }
 
-        $getLastSerialOfDoctor = Appointment::where('doctor_id', $data['doctor_id'])->select('serial_no')->orderBy('id', 'DESC')->limit(1)->first();
+        /* $getLastSerialOfDoctor = Appointment::where('doctor_id', $data['doctor_id'])->select('serial_no')->orderBy('id', 'DESC')->limit(1)->first();
         if ($getLastSerialOfDoctor) {
             $serialNo = $getLastSerialOfDoctor->serial_no + 1;
         } else {
             $serialNo = 1;
-        }
+        } */
         $appointmentData = [
             'doctor_id' => $data['doctor_id'],
             'patient_id' => $getPatientID->id,
@@ -74,8 +76,8 @@ class AppointmentRepository implements AppointmentRepositoryInterface
             'appointment_time' => $data['appointment_time'],
             'appointment_type' => "Online Appointment",
             'reason' => "Doctor visiting",
-            'serial_no' => $serialNo,
-            'appointment_status' => 'Pending',
+            'serial_no' => $data['serial_no'],
+            'appointment_status' => $this->utility::$appointmentStatus['pending'],
             'payment_status' => "Unpaid",
             'created_by' => $auth->user()->id
         ];
@@ -133,7 +135,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
                 ->find($updatedId);
 
 
-            $appointment->serial_no = str_pad($appointment->serial_no, 2, '0', STR_PAD_LEFT);
+            //$appointment->serial_no = str_pad($appointment->serial_no, 2, '0', STR_PAD_LEFT);
             return $appointment;
         }
 
@@ -147,90 +149,6 @@ class AppointmentRepository implements AppointmentRepositoryInterface
             ->where('id', $id)
             ->first();
     }
-
-
-    /* public function update($id, array $data)
-    {
-        $auth = Auth::guard('api');
-        $getPatientID = Patient::select('id')->where('user_id', $auth->user()->id)->first();
-
-        if (!$getPatientID) {
-            return false;
-        }
-
-        $getLastSerialOfDoctor = Appointment::where('doctor_id', $data['doctor_id'])->select('serial_no')->orderBy('id', 'DESC')->limit(1)->first();
-        if ($getLastSerialOfDoctor) {
-            $serialNo = $getLastSerialOfDoctor->serial_no + 1;
-        } else {
-            $serialNo = 1;
-        }
-        $appointmentData = [
-            'doctor_id' => $data['doctor_id'],
-            'patient_id' => $getPatientID->id,
-            'patient_family_id' => $data['patient_family_id'] ?? null,
-            'schedule_id' => $data['schedule_id'],
-            'shift_id' => $data['shift_id'],
-            'appointment_date' => $data['appointment_date'],
-            'appointment_time' => $data['appointment_time'],
-            'appointment_type' => "Online Appointment",
-            'reason' => "Doctor visiting",
-            'serial_no' => $serialNo,
-            'appointment_status' => 'Pending',
-            'payment_status' => "Unpaid",
-            'created_by' => $auth->user()->id
-        ];
-        $appointmentSubmit = Appointment::where('id', $id)->update($appointmentData);
-
-        if ($appointmentSubmit) {
-            $iconPath = asset('uploads/doctor');
-            $defaultMalePhoto = asset('assets/img/doctor-male.png');
-            $defaultFemalePhoto = asset('assets/img/doctor-female.png');
-
-            $appointment = Appointment::with([
-                'doctor' => function ($query) use ($iconPath, $defaultMalePhoto, $defaultFemalePhoto) {
-                    $query->select(
-                        'id',
-                        'first_name',
-                        'last_name',
-                        'bmdc',
-                        'degree',
-                        'designation',
-                        'gender',
-                        'image',
-                        DB::raw("
-                COALESCE(
-                    CONCAT('$iconPath/', image), 
-                    CASE 
-                        WHEN gender = 'Male' THEN '$defaultMalePhoto' 
-                        WHEN gender = 'Female' THEN '$defaultFemalePhoto' 
-                        ELSE '$defaultMalePhoto' 
-                    END
-                ) AS photo_url
-            ")
-                    );
-                },
-                'doctor.specialities:id,name'
-            ])
-                ->select(
-                    'id',
-                    'doctor_id',
-                    'patient_id',
-                    'serial_no',
-                    'appointment_type',
-                    'reason',
-                    'appointment_status',
-                    'appointment_date',
-                    'appointment_time'
-                )
-                ->find($appointmentSubmit->id);
-
-
-            $appointment->serial_no = str_pad($appointment->serial_no, 2, '0', STR_PAD_LEFT);
-            return $appointment;
-        }
-
-        return false;
-    } */
 
     public function delete($id)
     {
