@@ -26,7 +26,6 @@ class PatientRepository implements PatientRepositoryInterface
     public function documentList()
     {
         $baseUrl = env('BACKEND_URL');
-
         $getPatientID = Patient::select('id')->where('user_id', $this->getUserId())->first();
         if (!$getPatientID) {
             return false;
@@ -161,6 +160,7 @@ class PatientRepository implements PatientRepositoryInterface
     public function documentUpload($data)
     {
         return PatientDocument::create([
+            'patient_family_id' => $data['patient_family_id'] ?? '',
             'document_name' => $data['document_name'] ?? '',
             'file_name' => $data['file_name'] ?? '',
             'file_path' => $data['file_path'] ?? null,
@@ -181,6 +181,7 @@ class PatientRepository implements PatientRepositoryInterface
             return false;
         }
 
+        $document->patient_family_id = $data['patient_family_id'] ?? $document->patient_family_id;
         $document->document_name = $data['document_name'] ?? $document->document_name;
         $document->file_name = $data['file_name'] ?? $document->file_name;
         $document->file_path = $data['file_path'] ?? $document->file_path;

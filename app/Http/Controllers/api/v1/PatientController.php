@@ -82,6 +82,7 @@ class PatientController extends BaseController
     public function documentUpload(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'document_for' => 'nullable',
             'document_name' => 'required|string|max:255',
             'file' => 'required|file|mimetypes:application/pdf,image/jpeg,image/png,image/jpg',
         ]);
@@ -114,6 +115,7 @@ class PatientController extends BaseController
 
             // Prepare data
             $data = [
+                'patient_family_id' => $request->input('document_for'),
                 'document_name' => $request->input('document_name'),
                 'file_name' => $fileName,
                 'size' => $fileSize,
@@ -138,10 +140,13 @@ class PatientController extends BaseController
     public function documentUpdate($id, Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'document_for' => 'nullable',
             'document_name' => 'required|string|max:255',
             'file' => 'required|file|mimetypes:application/pdf,image/jpeg,image/png,image/jpg',
         ]);
 
+
+       
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'The given data was invalid.',
@@ -164,6 +169,7 @@ class PatientController extends BaseController
             $file->move($destinationPath, $fileName);
 
             $data = [
+                'patient_family_id' => $request->input('document_for'),
                 'document_name' => $request->input('document_name'),
                 'file_name' => $fileName,
                 'file_path' => 'uploads/patient/' . $fileName,
