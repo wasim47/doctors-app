@@ -104,5 +104,10 @@ Route::group(['prefix' => '/', 'middleware' => 'auth:api', 'namespace' => 'api\v
         $route->delete('/deleteFamily/{id}', [PatientController::class,'deleteFamily']);
         $route->post('/restoreFamily/{id}', [PatientController::class,'restoreFamily']);
         $route->delete('/forceDeleteFamily/{id}', [PatientController::class,'forceDeleteFamily']);
+
+        /** Document APIs */
+        $route->get('/documentList', [PatientController::class,'documentList']);
+        $route->post('/documentUpload', [PatientController::class,'documentUpload']);
+        $route->post('/documentUpdate/{id}', [PatientController::class,'documentUpdate']);
     });
 });

@@ -23,6 +23,11 @@ class PatientService {
         return $this->repository->getFamilyList();
     }
 
+    public function documentList(){
+
+        return $this->repository->documentList();
+    }
+
 
     public function storeApp($data){
 
@@ -47,6 +52,16 @@ class PatientService {
     public function updateFamily($id, $data){
 
         return $this->repository->updateFamily($id, $data);
+    }
+
+    public function documentUpload($data){
+
+        return $this->repository->documentUpload($data);
+    }
+
+    public function documentUpdate($id, $data){
+
+        return $this->repository->documentUpdate($id, $data);
     }
 
     public function deleteFamily($id){

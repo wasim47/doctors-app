@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Patient;
 use App\Models\PatientFamily;
+use App\Models\PatientDocument;
 use App\Models\User;
 use App\Repositories\PatientRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
@@ -14,9 +15,37 @@ class PatientRepository implements PatientRepositoryInterface
 
     public function getFamilyList()
     {
-        $auth = Auth::guard('api');
-        return PatientFamily::where('patient_id', $auth->user()->id)->select('id', 'first_name', 'last_name', 'relation', 'country_code','phone_no', 'email', 'gender', 'date_of_birth')->get();
+        $getPatientID = Patient::select('id')->where('user_id', $this->getUserId())->first();
+        if (!$getPatientID) {
+            return false;
+        }
+
+        return PatientFamily::where('patient_id', $getPatientID->id)->select('id', 'first_name', 'last_name', 'relation', 'country_code', 'phone_no', 'email', 'gender', 'date_of_birth')->get();
     }
+
+    public function documentList()
+    {
+        $baseUrl = env('BACKEND_URL');
+
+        $getPatientID = Patient::select('id')->where('user_id', $this->getUserId())->first();
+        if (!$getPatientID) {
+            return false;
+        }
+
+        $documents = PatientDocument::where('patient_id', $getPatientID->id)
+            ->select('id', 'document_name', 'file_path')
+            ->get();
+
+        $documents = $documents->map(function ($doc) use ($baseUrl) {
+            if (!empty($doc->file_path)) {
+                $doc->file_path = rtrim($baseUrl, '/') . '/' . ltrim($doc->file_path, '/');
+            }
+            return $doc;
+        });
+
+        return $documents;
+    }
+
 
     ////////////////// Admin ////////
     public function getList()
@@ -26,7 +55,6 @@ class PatientRepository implements PatientRepositoryInterface
 
     public function create($data)
     {
-        $auth = Auth::guard('api');
         $user = User::create([
             'first_name' => $data['first_name'] ?? '',
             'last_name' => $data['last_name'] ?? '',
@@ -43,7 +71,7 @@ class PatientRepository implements PatientRepositoryInterface
             'updated_by' => $data['updated_by'] ?? null,
         ]);
 
-        $patient = Patient::create([
+        return Patient::create([
             'first_name' => $data['first_name'] ?? '',
             'last_name' => $data['last_name'] ?? '',
             'date_of_birth' => $data['date_of_birth'] ?? null,
@@ -53,18 +81,14 @@ class PatientRepository implements PatientRepositoryInterface
             'gender' => $data['gender'] ?? null,
             'status' => $data['status'] ?? 1,
             'user_id' => $user->id,
-            'created_by' => $auth->user()->id,
+            'created_by' => $this->getUserId(),
             'updated_by' => $data['updated_by'] ?? null,
         ]);
-
-        return $patient;
     }
 
     public function createFamily($data)
     {
-
-        $auth = Auth::guard('api');
-        $patient = PatientFamily::create([
+        return PatientFamily::create([
             'first_name' => $data['first_name'] ?? '',
             'last_name' => $data['last_name'] ?? '',
             'date_of_birth' => $data['dob'] ?? null,
@@ -74,12 +98,10 @@ class PatientRepository implements PatientRepositoryInterface
             'phone_no' => $data['mobile'] ?? '',
             'gender' => $data['gender'] ?? null,
             'status' => 1,
-            'patient_id' => $auth->user()->id,
-            'created_by' => $auth->user()->id,
+            'patient_id' => $this->getPatientId(),
+            'created_by' => $this->getUserId(),
             'updated_by' => $data['updated_by'] ?? null,
         ]);
-
-        return $patient;
     }
 
     public function find($id)
@@ -90,13 +112,9 @@ class PatientRepository implements PatientRepositoryInterface
     public function updateFamily($id, array $data)
     {
         $patientFamily = PatientFamily::find($id);
-
-        // Ensure the record exists before updating
         if (!$patientFamily) {
             return false;
         }
-
-        $user = Auth::guard('api')->user();
 
         $menuUpdate = [
             'first_name' => $data['first_name'] ?? '',
@@ -108,9 +126,9 @@ class PatientRepository implements PatientRepositoryInterface
             'phone_no' => $data['mobile'] ?? '',
             'gender' => $data['gender'] ?? null,
             'status' => 1, // Ensure this is needed
-            'patient_id' => $user->id,
-            'created_by' => $user->id,
-            'updated_by' => $data['updated_by'] ?? $user->id, // Default updated_by to the current user
+            'patient_id' => $this->getPatientId(),
+            'created_by' => $this->getUserId(),
+            'updated_by' => $data['updated_by'] ?? $this->getUserId(),
         ];
 
         if ($patientFamily->update($menuUpdate)) {
@@ -138,6 +156,42 @@ class PatientRepository implements PatientRepositoryInterface
 
         return $patientData->update($menuUpdate);
     }
+
+
+    public function documentUpload($data)
+    {
+        return PatientDocument::create([
+            'document_name' => $data['document_name'] ?? '',
+            'file_name' => $data['file_name'] ?? '',
+            'file_path' => $data['file_path'] ?? null,
+            'mime_type' => $data['mime_type'] ?? '',
+            'size' => $data['size'] ?? 0,
+            'status' => 1,
+            'patient_id' => $this->getPatientId(),
+            'created_by' => $this->getUserId(),
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+    }
+
+    public function documentUpdate($id, $data)
+    {
+        $document = PatientDocument::find($id);
+
+        if (!$document) {
+            return false;
+        }
+
+        $document->document_name = $data['document_name'] ?? $document->document_name;
+        $document->file_name = $data['file_name'] ?? $document->file_name;
+        $document->file_path = $data['file_path'] ?? $document->file_path;
+        $document->mime_type = $data['mime_type'] ?? $document->mime_type;
+        $document->size = $data['size'] ?? $document->size;
+        $document->updated_by = $this->getUserId();
+        $document->save();
+
+        return $document;
+    }
+
 
     public function deleteFamily($id)
     {
@@ -174,5 +228,22 @@ class PatientRepository implements PatientRepositoryInterface
         $patientData->forceDelete(); // Permanently delete the record
 
         return response()->json(['message' => 'Family member permanently deleted']);
+    }
+
+    private function getPatientId()
+    {
+        $auth = Auth::guard('api');
+        $getPatientID = Patient::select('id')->where('user_id', $auth->user()->id)->first();
+        if (!$getPatientID) {
+            return false;
+        } else {
+            return $getPatientID->id;
+        }
+    }
+
+    private function getUserId()
+    {
+        $auth = Auth::guard('api');
+        return $auth->user()->id;
     }
 }
