@@ -15,16 +15,7 @@ class PatientFamily extends Model
     protected $fillable = [];
 
     protected $guarded = ['id'];
-
-    /* protected $appends = ['patient_member_name'];
-
-    protected $hidden = ['first_name', 'last_name'];
-
-    public function getPatientMemberNameAttribute()
-    {
-        return $this->first_name . ' ' . $this->last_name;
-    } */
-
+    
     public function appointments(){
         return $this->hasMany(Appointment::class, 'patient_id', 'id');
     }

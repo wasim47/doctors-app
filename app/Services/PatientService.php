@@ -64,6 +64,7 @@ class PatientService {
         return $this->repository->documentUpdate($id, $data);
     }
 
+    /** Patient Family soft delete and hard delete if need */
     public function deleteFamily($id){
 
         return $this->repository->deleteFamily($id);
@@ -77,5 +78,21 @@ class PatientService {
     public function forceDeleteFamily($id){
 
         return $this->repository->forceDeleteFamily($id);
+    }
+
+    /** Patient Document soft delete and hard delete if need */
+    public function deleteDocument($id){
+
+        return $this->repository->deleteDocument($id);
+    }
+
+    public function restoreDocument($id){
+
+        return $this->repository->restoreDocument($id);
+    }
+
+    public function forceDeleteDocument($id){
+
+        return $this->repository->forceDeleteDocument($id);
     }
 }

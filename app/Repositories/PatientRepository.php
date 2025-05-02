@@ -31,8 +31,8 @@ class PatientRepository implements PatientRepositoryInterface
             return false;
         }
 
-        $documents = PatientDocument::where('patient_id', $getPatientID->id)
-            ->select('id', 'document_name', 'file_path')
+        $documents = PatientDocument::with('patientFamily:id,first_name,last_name')->where('patient_id', $getPatientID->id)
+            ->select('id', 'patient_family_id', 'document_name', 'file_path', 'created_at AS entryDate', 'updated_at AS updateDate')
             ->get();
 
         $documents = $documents->map(function ($doc) use ($baseUrl) {
@@ -159,19 +159,25 @@ class PatientRepository implements PatientRepositoryInterface
 
     public function documentUpload($data)
     {
+        if (empty($data['file_name']) || empty($data['document_name'])) {
+            return false;
+        }
+
         return PatientDocument::create([
-            'patient_family_id' => $data['patient_family_id'] ?? '',
-            'document_name' => $data['document_name'] ?? '',
-            'file_name' => $data['file_name'] ?? '',
-            'file_path' => $data['file_path'] ?? null,
-            'mime_type' => $data['mime_type'] ?? '',
-            'size' => $data['size'] ?? 0,
-            'status' => 1,
-            'patient_id' => $this->getPatientId(),
-            'created_by' => $this->getUserId(),
-            'created_at' => date('Y-m-d H:i:s')
+            'patient_family_id' => $data['patient_family_id'] ?? 0,
+            'document_name'     => $data['document_name'],
+            'file_name'         => $data['file_name'],
+            'file_path'         => $data['file_path'],
+            'mime_type'         => $data['mime_type'],
+            'size'              => $data['size'],
+            'status'            => 1,
+            'patient_id'        => $this->getPatientId(),
+            'created_by'        => $this->getUserId(),
+            'created_at'        => now(),
         ]);
     }
+
+
 
     public function documentUpdate($id, $data)
     {
@@ -193,7 +199,47 @@ class PatientRepository implements PatientRepositoryInterface
         return $document;
     }
 
+    /** Patient Document soft delete and hard delete if need */
+    public function deleteDocument($id)
+    {
+        $patientData = PatientDocument::find($id);
 
+        if (!$patientData) {
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+
+        return $patientData->delete(); // Soft delete the record
+    }
+
+    public function restoreDocument($id)
+    {
+        $patientData = PatientDocument::onlyTrashed()->find($id);
+
+        if (!$patientData) {
+            return response()->json(['message' => 'No deleted record found'], 404);
+        }
+
+        $patientData->restore(); // Restore the record
+
+        return response()->json(['message' => 'Document member restored successfully', 'data' => $patientData]);
+    }
+
+    public function forceDeleteDocument($id)
+    {
+        $patientData = PatientDocument::onlyTrashed()->find($id);
+
+        if (!$patientData) {
+            return response()->json(['message' => 'No deleted record found'], 404);
+        }
+
+        $patientData->forceDelete(); // Permanently delete the record
+
+        return response()->json(['message' => 'Document member permanently deleted']);
+    }
+
+
+
+    /** Patient Family soft delete and hard delete if need */
     public function deleteFamily($id)
     {
         $patientData = PatientFamily::find($id);

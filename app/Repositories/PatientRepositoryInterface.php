@@ -17,4 +17,8 @@ interface PatientRepositoryInterface
     public function deleteFamily($id);
     public function restoreFamily($id);
     public function forceDeleteFamily($id);
+
+    public function deleteDocument($id);
+    public function restoreDocument($id);
+    public function forceDeleteDocument($id);
 }
