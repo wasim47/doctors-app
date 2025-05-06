@@ -58,6 +58,16 @@
                                 </div>
                             </div>
 
+                            <div class="input-group mb-3 row">
+                                <label for="contact" class="col-md-3 col-form-label text-md-right">{{ __('Contact No') }}</label>
+                                <div class="col-md-8">
+                                    <input id="contact" type="tel" class="form-control" name="contact" value="{{ old('contact') }}" required>
+                                    @error('contact')
+                                    <span style="color: red;">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <div class="col-sm-12" style="margin-bottom:10px;">
                                 <div class="input-group mb-3 row">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="address">Address </span>
@@ -65,6 +75,26 @@
                                     <div class="col-md-9 col-sm-9 col-xs-12">
                                         <textarea name="address" class="form-control"></textarea>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3 row">
+                                <label for="latitude" class="col-md-3 col-form-label text-md-right">{{ __('Latitude') }}</label>
+                                <div class="col-md-8">
+                                    <input id="latitude" type="tel" class="form-control" name="latitude" value="{{ old('latitude') }}" required>
+                                    @error('latitude')
+                                    <span style="color: red;">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3 row">
+                                <label for="longitude" class="col-md-3 col-form-label text-md-right">{{ __('Longitude') }}</label>
+                                <div class="col-md-8">
+                                    <input id="longitude" type="tel" class="form-control" name="longitude" value="{{ old('longitude') }}" required>
+                                    @error('longitude')
+                                    <span style="color: red;">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 

@@ -70,6 +70,36 @@
                             </div>
 
                             <div class="input-group mb-3 row">
+                                <label for="contact" class="col-md-3 col-form-label text-md-right">{{ __('Contact No') }}</label>
+                                <div class="col-md-8">
+                                    <input id="contact" type="tel" class="form-control" name="contact" value="{{ $branch->contact }}" required>
+                                    @error('contact')
+                                    <span style="color: red;">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3 row">
+                                <label for="latitude" class="col-md-3 col-form-label text-md-right">{{ __('Latitude') }}</label>
+                                <div class="col-md-8">
+                                    <input id="latitude" type="tel" class="form-control" name="latitude" value="{{ $branch->latitude }}" required>
+                                    @error('latitude')
+                                    <span style="color: red;">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3 row">
+                                <label for="longitude" class="col-md-3 col-form-label text-md-right">{{ __('Longitude') }}</label>
+                                <div class="col-md-8">
+                                    <input id="longitude" type="tel" class="form-control" name="longitude" value="{{ $branch->longitude }}" required>
+                                    @error('longitude')
+                                    <span style="color: red;">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3 row">
                                 <label for="name" class="col-md-3 col-form-label text-md-right">{{ __('Status') }}</label>
                                 <div class="col-md-8">
                                     <select name="status" class="form-control">

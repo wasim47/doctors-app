@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class BranchRepository implements BranchRepositoryInterface {
 
     public function getApiList(){
-        return Branch::select('id','name','address')->get();
+        return Branch::select('id','name','contact','address','latitude','longitude')->get();
     }
 
     ////////////////// Admin ////////
@@ -20,6 +20,9 @@ class BranchRepository implements BranchRepositoryInterface {
         return Branch::create([
             'name' => $data['name'],
             'address' => $data['address'],
+            'contact' => $data['contact'],
+            'latitude' => $data['latitude'],
+            'longitude' => $data['longitude'],
             'hospital_id' => $data['hospital_id'],
             'status' => $data['status'],
             'created_by' => 1
@@ -37,6 +40,9 @@ class BranchRepository implements BranchRepositoryInterface {
         $menuUpdate = array(
 			'name'=>  $data['name'],
 			'address' => $data['address'],
+            'contact' => $data['contact'],
+            'latitude' => $data['latitude'],
+            'longitude' => $data['longitude'],
             'hospital_id' => $data['hospital_id'],
 			'status'=>  $data['status'],
 			'updated_at'=> date('Y-m-d H:i:s')

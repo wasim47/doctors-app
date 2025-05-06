@@ -43,6 +43,7 @@
                                                 <th width="4%"><input name="checkbox" onclick='checkedAll();' type="checkbox" readonly="readonly" /></th>
                                                 <th>SI</th>
                                                 <th>Branch Name</th>
+                                                <th>Contact</th>
                                                 <th>Hostpital</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
@@ -54,6 +55,7 @@
                                                 <td><input type="checkbox" name="summe_code[]" id="summe_code<?php echo $data->id; ?>" value="{{ $data->id }}" /></td>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $data->name }}</td>
+                                                <td>{{ $data->contact }}</td>
                                                 <td>{{ $data->hospital ? $data->hospital->name : '' }}</td>
                                                 <td>
                                                     {!! $data->status ? '<span class="badge text-bg-success">Active</span>' : '<span class="badge text-bg-danger">Inactive</span>' !!}
