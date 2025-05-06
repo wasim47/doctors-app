@@ -23,4 +23,8 @@ class PatientDocument extends Model
     public function patientFamily(){
         return $this->belongsTo(PatientFamily::class, 'patient_family_id', 'id');
     }
+
+    public function files(){
+        return $this->hasMany(PatientDocumentFile::class, 'document_id', 'id');
+    }
 }

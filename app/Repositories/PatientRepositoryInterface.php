@@ -13,7 +13,10 @@ interface PatientRepositoryInterface
     public function update($id, array $data);
     public function updateFamily($id, array $data);
     public function documentUpload($data);
+    public function documentFileUpload($data, $action);
     public function documentUpdate($id, array $data);
+    public function deleteExistingFiles($id);
+    
     public function deleteFamily($id);
     public function restoreFamily($id);
     public function forceDeleteFamily($id);

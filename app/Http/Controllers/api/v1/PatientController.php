@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\PatientStoreRequest;
 use App\Http\Resources\PatientResource;
 use App\Models\Patient;
+use App\Models\PatientDocument;
 use App\Services\PatientService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -82,10 +83,8 @@ class PatientController extends BaseController
     public function documentUpload(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'document_name'  => 'required|array',
-            'document_name.*' => 'required|string|max:255',
-            'document_for'   => 'nullable|array',
-            'document_for.*' => 'nullable|numeric',
+            'document_name' => 'required|string|max:255',
+            'document_for' => 'nullable|numeric',
             'files'          => 'required|array',
             'files.*'        => 'file|mimetypes:application/pdf,image/jpeg,image/png,image/jpg|max:5120',
         ]);
@@ -99,24 +98,16 @@ class PatientController extends BaseController
 
         $files = $request->file('files');
         $documentNames = $request->input('document_name');
-        $documentFors = $request->input('document_for', []);
+        $documentFors = $request->input('document_for');
 
-        // Ensure each file has a corresponding document name and optionally document_for
-        if (count($files) !== count($documentNames)) {
-            return response()->json([
-                'message' => 'Mismatch between files and document names.',
-            ], 422);
-        }
+        try {
+            $data = [
+                'patient_family_id' => $documentFors ?? 0,
+                'document_name'     => $documentNames ?? '',
+            ];
 
-        if (!empty($documentFors) && count($documentFors) !== count($files)) {
-            return response()->json([
-                'message' => 'Mismatch between files and document_for values.',
-            ], 422);
-        }
-
-        $results = [];
-        foreach ($files as $index => $file) {
-            try {
+            $documentId = $this->service->documentUpload($data);
+            foreach ($files as $file) {
                 $originalName = $file->getClientOriginalName();
                 $extension = $file->getClientOriginalExtension();
                 $mimeType = $file->getMimeType();
@@ -125,41 +116,42 @@ class PatientController extends BaseController
 
                 $destinationPath = public_path('uploads/patient');
                 if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0777, true);
+                    mkdir($destinationPath, 0755, true);
                 }
 
                 $file->move($destinationPath, $fileName);
-
-                $data = [
-                    'patient_family_id' => $documentFors[$index] ?? 0,
-                    'document_name'     => $documentNames[$index] ?? '',
-                    'file_name'         => $fileName,
+                $dataFile = [
+                    'document_id'       => $documentId,
+                    'file_name'         => $originalName,
                     'file_path'         => 'uploads/patient/' . $fileName,
                     'mime_type'         => $mimeType,
                     'size'              => $fileSize,
                 ];
-
-                $results[] = $this->service->documentUpload($data);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'message' => 'Failed to upload one or more documents.',
-                    'error'   => $e->getMessage(),
-                ], 500);
+                $this->service->documentFileUpload($dataFile, 'insert');
             }
-        }
 
-        return $this->successResponse($results, 'Patient Documents Added Successfully', Response::HTTP_OK);
+            $documents = PatientDocument::with(['patientFamily:id,first_name,last_name', 'files:id,file_path,document_id'])
+                ->select('id', 'patient_family_id', 'document_name')
+                ->where('id', $documentId)
+                ->first();
+
+            return $this->successResponse($documents, 'Patient Documents Added Successfully', Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to upload one or more documents.',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function documentUpdate($id, Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'document_for' => 'nullable',
+            'document_for'  => 'nullable|numeric',
             'document_name' => 'required|string|max:255',
-            'file' => 'required|file|mimetypes:application/pdf,image/jpeg,image/png,image/jpg',
+            'files'         => 'required|array',
+            'files.*'       => 'file|mimetypes:application/pdf,image/jpeg,image/png,image/jpg|max:5120',
         ]);
-
-
 
         if ($validator->fails()) {
             return response()->json([
@@ -168,45 +160,59 @@ class PatientController extends BaseController
             ], 422);
         }
 
+        $files         = $request->file('files');
+        $documentName  = $request->input('document_name');
+        $documentFor   = $request->input('document_for');
+
         try {
-            $file = $request->file('file');
-            $originalName = $file->getClientOriginalName();
-            $mimeType = $file->getMimeType();
-            $fileSize = $file->getSize();
-            $extension = $file->getClientOriginalExtension();
-            $fileName = time() . '_' . pathinfo(md5($originalName), PATHINFO_FILENAME) . '.' . $extension;
-
-            $destinationPath = public_path('uploads/patient');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
-            }
-            $file->move($destinationPath, $fileName);
-
+            // First update the document metadata (not files)
             $data = [
-                'patient_family_id' => $request->input('document_for'),
-                'document_name' => $request->input('document_name'),
-                'file_name' => $fileName,
-                'file_path' => 'uploads/patient/' . $fileName,
-                'mime_type' => $mimeType,
-                'size' => $fileSize,
+                'patient_family_id' => $documentFor ?? 0,
+                'document_name'     => $documentName,
             ];
+            $this->service->documentUpdate($id, $data); // Ensure this method exists in your service
 
-            $updateResponse = $this->service->documentUpdate($id, $data);
+            // Delete existing files (optional step depending on your app’s logic)
+            $this->service->deleteExistingFiles($id); // Implement if needed
 
-            if (!$updateResponse) {
-                return response()->json([
-                    'message' => 'Patient document not updated, please try again',
-                ], 422);
+            foreach ($files as $file) {
+                $originalName = $file->getClientOriginalName();
+                $extension    = $file->getClientOriginalExtension();
+                $mimeType     = $file->getMimeType();
+                $fileSize     = $file->getSize();
+                $fileName     = time() . '_' . uniqid() . '.' . $extension;
+
+                $destinationPath = public_path('uploads/patient');
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0755, true);
+                }
+
+                $file->move($destinationPath, $fileName);
+
+                $dataFile = [
+                    'document_id'   => $id,
+                    'file_name'     => $originalName,
+                    'file_path'     => 'uploads/patient/' . $fileName,
+                    'mime_type'     => $mimeType,
+                    'size'          => $fileSize,
+                ];
+                $this->service->documentFileUpload($dataFile, 'update'); // Same method as in create
             }
 
-            return $this->successResponse($updateResponse, 'Patient Document Updated Successfully', Response::HTTP_OK);
+            $documents = PatientDocument::with(['patientFamily:id,first_name,last_name', 'files:id,file_path,document_id'])
+                ->select('id', 'patient_family_id', 'document_name')
+                ->where('id', $id)
+                ->first();
+
+            return $this->successResponse($documents, 'Patient Document Updated Successfully', Response::HTTP_OK);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to update document.',
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ], 500);
         }
     }
+
 
 
     /** Patient Family soft delete and hard delete if need */
@@ -265,11 +271,10 @@ class PatientController extends BaseController
 
     public function forceDeleteDocument($id)
     {
-        $updateResponse = $this->service->forceDeleteDocument($id);
-        if ($updateResponse) {
-            return response()->json([
-                'message' => 'Successfully Deleted Permanently',
-            ], 200);
-        }
+        $result = $this->service->forceDeleteDocument($id);
+
+        return response()->json([
+            'message' => $result['message']
+        ], $result['code']);
     }
 }

@@ -59,9 +59,19 @@ class PatientService {
         return $this->repository->documentUpload($data);
     }
 
+    public function documentFileUpload($data, $action){
+
+        return $this->repository->documentFileUpload($data, $action);
+    }
+
     public function documentUpdate($id, $data){
 
         return $this->repository->documentUpdate($id, $data);
+    }
+
+    public function deleteExistingFiles($id){
+
+        return $this->repository->deleteExistingFiles($id);
     }
 
     /** Patient Family soft delete and hard delete if need */
