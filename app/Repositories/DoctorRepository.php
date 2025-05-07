@@ -26,7 +26,7 @@ class DoctorRepository implements DoctorRepositoryInterface
         $defaultMalePhoto = asset('assets/img/doctor-male.png');
         $defaultFemalePhoto = asset('assets/img/doctor-female.png');
 
-        return Doctor::with('specialities:id,name')
+        return Doctor::with('specialities:id,name','schedule')
             ->select(
                 'id',
                 'first_name',
@@ -36,17 +36,18 @@ class DoctorRepository implements DoctorRepositoryInterface
                 'designation',
                 'gender',
                 DB::raw("
-                COALESCE(
-                    CONCAT('$iconPath/', image), 
-                    CASE 
-                        WHEN gender = 'Male' THEN '$defaultMalePhoto' 
-                        WHEN gender = 'Female' THEN '$defaultFemalePhoto' 
-                        ELSE '$defaultMalePhoto' 
-                    END
-                ) AS icon
-            ")
+                    COALESCE(
+                        CONCAT('$iconPath/', image), 
+                        CASE 
+                            WHEN gender = 'Male' THEN '$defaultMalePhoto' 
+                            WHEN gender = 'Female' THEN '$defaultFemalePhoto' 
+                            ELSE '$defaultMalePhoto' 
+                        END
+                    ) AS doctor_photo
+                ")
             )
             ->whereNull('deleted_at')
+            ->whereHas('schedule')
             ->when(!empty($data['speciality_id']), function ($query) use ($data) {
                 $query->whereHas('specialities', function ($q) use ($data) {
                     $q->where('speciality_id', $data['speciality_id']);
@@ -93,17 +94,6 @@ class DoctorRepository implements DoctorRepositoryInterface
         if (!$doctor) {
             return response()->json(['error' => 'Doctor not found'], 404);
         }
-
-
-        /* foreach ($doctor->schedule as $schedule) {
-            foreach ($schedule->shift as $shed) {
-                foreach ($schedule->shift as $shift) {
-                    $time_slots = $this->generateTime($shift, $id, $appointment_date);
-                    $shift->times =  $time_slots;
-                }
-            }
-        } */
-
         return $doctor;
     }
 
