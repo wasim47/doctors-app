@@ -44,6 +44,7 @@
                                                 <th>SI</th>
                                                 <th>Branch Name</th>
                                                 <th>Contact</th>
+                                                <th>Hotline</th>
                                                 <th>Hostpital</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
@@ -56,6 +57,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $data->name }}</td>
                                                 <td>{{ $data->contact }}</td>
+                                                <td>{{ $data->hotline }}</td>
                                                 <td>{{ $data->hospital ? $data->hospital->name : '' }}</td>
                                                 <td>
                                                     {!! $data->status ? '<span class="badge text-bg-success">Active</span>' : '<span class="badge text-bg-danger">Inactive</span>' !!}

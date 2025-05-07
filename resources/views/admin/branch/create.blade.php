@@ -12,7 +12,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
-                            <li class="breadcrumb-item"><a href="{{ route('branch.create') }}" class="btn btn-primary btn-sm">Add New Branch</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('branch.index') }}" class="btn btn-primary btn-sm">View Branch List</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('branch.create') }}" class="btn btn-success btn-sm">Approve</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('branch.create') }}" class="btn btn-danger btn-sm">Disapprove</a></li>
 
@@ -23,7 +23,7 @@
         </div>
         <div class="app-content">
             <div class="form-container col-sm-8 offset-2">
-            
+
                 <form method="POST" action="{{ route('branch.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="card card-success card-outline mb-4">
@@ -38,22 +38,22 @@
                                 <div class="col-md-8">
                                     <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required>
                                     @error('name')
-                                        <span style="color: red;">{{ $message }}</span>
+                                    <span style="color: red;">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
-                            
+
                             <div class="input-group mb-3 row">
                                 <label for="name" class="col-md-3 col-form-label text-md-right">{{ __('Hospital') }}</label>
                                 <div class="col-md-8">
                                     <select name="hospital_id" id="hospital_id" class="form-control" required>
                                         <option value="">Select Hospital</option>
                                         @foreach($hospitalList as $hospital)
-                                            <option value="{{ $hospital->id }}">{{ $hospital->name }}</option>
+                                        <option value="{{ $hospital->id }}">{{ $hospital->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('hospital_id')
-                                        <span style="color: red;">{{ $message }}</span>
+                                    <span style="color: red;">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
@@ -67,14 +67,13 @@
                                     @enderror
                                 </div>
                             </div>
-
-                            <div class="col-sm-12" style="margin-bottom:10px;">
-                                <div class="input-group mb-3 row">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="address">Address </span>
-                                    </label>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <textarea name="address" class="form-control"></textarea>
-                                    </div>
+                            <div class="input-group mb-3 row">
+                                <label for="hotline" class="col-md-3 col-form-label text-md-right">{{ __('Hotline Number') }}</label>
+                                <div class="col-md-8">
+                                    <input id="hotline" type="tel" class="form-control" name="hotline" value="{{ old('hotline') }}" required>
+                                    @error('hotline')
+                                    <span style="color: red;">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -95,6 +94,16 @@
                                     @error('longitude')
                                     <span style="color: red;">{{ $message }}</span>
                                     @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" style="margin-bottom:10px;">
+                                <div class="input-group mb-3 row">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="address">Address </span>
+                                    </label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        <textarea name="address" class="form-control"></textarea>
+                                    </div>
                                 </div>
                             </div>
 

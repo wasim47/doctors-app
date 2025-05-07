@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class BranchRepository implements BranchRepositoryInterface {
 
     public function getApiList(){
-        return Branch::select('id','name','contact','address','latitude','longitude')->get();
+        return Branch::select('id','name','contact','hotline','address','latitude','longitude')->get();
     }
 
     ////////////////// Admin ////////
@@ -21,6 +21,7 @@ class BranchRepository implements BranchRepositoryInterface {
             'name' => $data['name'],
             'address' => $data['address'],
             'contact' => $data['contact'],
+            'hotline' => $data['hotline'],
             'latitude' => $data['latitude'],
             'longitude' => $data['longitude'],
             'hospital_id' => $data['hospital_id'],
@@ -41,6 +42,7 @@ class BranchRepository implements BranchRepositoryInterface {
 			'name'=>  $data['name'],
 			'address' => $data['address'],
             'contact' => $data['contact'],
+            'hotline' => $data['hotline'],
             'latitude' => $data['latitude'],
             'longitude' => $data['longitude'],
             'hospital_id' => $data['hospital_id'],
