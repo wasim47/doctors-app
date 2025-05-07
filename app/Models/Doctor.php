@@ -16,7 +16,7 @@ class Doctor extends Model
 
     protected $guarded = ['id'];
 
-    protected $appends = ['doctor_name'];
+    protected $appends = ['doctor_name', 'doctor_photo'];
 
     protected $hidden = ['first_name', 'last_name'];
 
@@ -24,6 +24,20 @@ class Doctor extends Model
     {
         return $this->first_name . ' ' . $this->last_name;
     }
+
+    public function getDoctorPhotoAttribute()
+    {
+        $iconPath = asset('uploads/doctor');
+        $defaultMale = asset('assets/img/doctor-male.png');
+        $defaultFemale = asset('assets/img/doctor-female.png');
+
+        if ($this->image) {
+            return "$iconPath/{$this->image}";
+        }
+
+        return $this->gender === 'Female' ? $defaultFemale : $defaultMale;
+    }
+
 
     public function appointments(){
         return $this->hasMany(Appointment::class, 'doctor_id', 'id');
