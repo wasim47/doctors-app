@@ -20,7 +20,7 @@ class BranchController extends BaseController
         
     }
 
-    public function index(){
-        return $this->successResponse(BranchResource::collection($this->service->getApiList()), 'Doctor Specialities', Response::HTTP_OK);
+    public function index($doctorId = null){
+        return $this->successResponse(BranchResource::collection($this->service->getApiList($doctorId)), 'Doctor Specialities', Response::HTTP_OK);
     }
 }

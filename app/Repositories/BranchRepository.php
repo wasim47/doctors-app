@@ -2,13 +2,21 @@
 namespace App\Repositories;
 
 use App\Models\Branch;
+use App\Models\DoctorBranch;
 use App\Repositories\BranchRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class BranchRepository implements BranchRepositoryInterface {
 
-    public function getApiList(){
-        return Branch::select('id','name','contact','hotline','address','latitude','longitude')->get();
+    public function getApiList($doctorId){
+        $query = Branch::select('id','name','contact','hotline','address','latitude','longitude');
+
+        if($doctorId){
+            $doctorBranch = DoctorBranch::select('branch_id')->where('doctor_id', $doctorId)->pluck('branch_id')->toArray();
+            $query->whereIn('id', $doctorBranch);
+        }
+
+        return $query->get();
     }
 
     ////////////////// Admin ////////

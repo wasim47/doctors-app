@@ -13,9 +13,9 @@ class BranchService {
         $this->repository = $repository;
     }
 
-    public function getApiList(){
+    public function getApiList($doctorId){
 
-        return $this->repository->getApiList();
+        return $this->repository->getApiList($doctorId);
     }
     
     public function index(){

@@ -70,26 +70,20 @@ class DoctorRepository implements DoctorRepositoryInterface
             ->get();
     }
 
-    public function findApp($id, $appointment_date = null)
+    public function findApp($id, $branchId = null)
     {
-        $iconPath = asset('uploads/doctor');
-        $defaultMalePhoto = asset('assets/img/doctor-male.png');
-        $defaultFemalePhoto = asset('assets/img/doctor-female.png');
-
-        $doctor = Doctor::with('specialities:id,name', 'branches:id,name', 'schedule:id,doctor_id,days_of_weeks')
-            ->select('id', 'first_name', 'last_name', 'designation', 'degree', 'regular_fee', DB::raw("
-            COALESCE(
-                CONCAT('$iconPath/', image), 
-                CASE 
-                    WHEN gender = 'Male' THEN '$defaultMalePhoto' 
-                    WHEN gender = 'Female' THEN '$defaultFemalePhoto' 
-                    ELSE '$defaultMalePhoto' 
-                END
-            ) AS doctor_photo
-        "))
-            ->whereNull('deleted_at')
-            ->where('id', $id)
-            ->first();
+        $doctor = Doctor::with([
+            'specialities:id,name',
+            'branches:id,name',
+            'schedule' => function ($query) use ($branchId) {
+                $query->where('branch_id', $branchId)
+                      ->select('id', 'doctor_id', 'days_of_weeks', 'branch_id');
+            }
+        ])
+        ->select('id', 'first_name', 'last_name', 'designation', 'degree', 'regular_fee')
+        ->whereNull('deleted_at')
+        ->where('id', $id)
+        ->first();
 
         if (!$doctor) {
             return response()->json(['error' => 'Doctor not found'], 404);

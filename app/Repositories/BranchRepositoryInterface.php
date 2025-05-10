@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 interface BranchRepositoryInterface
 {
-    public function getApiList();   // For API use
+    public function getApiList($doctorId);   // For API use
     public function getList();
     public function create(array $data);
     public function find($id);

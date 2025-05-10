@@ -48,7 +48,7 @@ Route::controller(AuthController::class)->group(function($route){
     /// ALl route related of doctor
     $route->group(['prefix' => 'doctor'], function($route){
         $route->get('/', [DoctorController::class,'index']);
-        $route->get('/details/{id}', [DoctorController::class,'show']);
+        $route->get('/details/{id}/{branchId?}', [DoctorController::class,'show']);
         $route->get('/schedule/{doctor_id}/{schedule_id}/{appointment_date}', [DoctorController::class,'doctorSchedule']);
         $route->get('/profile/{id}', [DoctorController::class,'profile']);
     });
@@ -74,7 +74,7 @@ Route::controller(AuthController::class)->group(function($route){
     });
 
     $route->group(['prefix' => 'branch'], function($route){
-        $route->get('/', [BranchController::class,'index']);
+        $route->get('/{doctor_id?}', [BranchController::class,'index']);
     });
 });
 
