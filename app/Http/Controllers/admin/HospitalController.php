@@ -26,13 +26,12 @@ class HospitalController extends BaseController
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'phone_no' => 'required',
             'email' => 'required',
             'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric'
         ], [
             'name.required' => 'The hospital name is required.',
             'name.max' => 'The hospital name must not exceed 255 characters.',

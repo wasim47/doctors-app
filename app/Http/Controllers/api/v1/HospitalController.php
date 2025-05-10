@@ -7,6 +7,7 @@ use App\Http\Requests\HospitalStoreRequest;
 use App\Http\Resources\HospitalResource;
 use App\Models\Hospital;
 use App\Services\HospitalService;
+use Symfony\Component\HttpFoundation\Response;
 
 class HospitalController extends BaseController
 {
@@ -18,24 +19,22 @@ class HospitalController extends BaseController
         $this->service = $service;
         
     }
-    /**
-     * @OA\Get(
-     *     path="/api/hospital",
-     *     @OA\Response(response="200", description="An example endpoint")
-     * )
-     */
-    //// Get all Speciality form app
+    
     public function index(){
-        
-        // return response()->json($this->service->index(), 200);
         return HospitalResource::collection($this->service->index());
     }
 
+    public function show($id){
+        $response = $this->service->find($id);
+        if($response){
+            return $this->successResponse($this->service->find($id), 'Hospital Details', Response::HTTP_OK);
+        }
+        else{
+            return $this->errorResponse('Hospital Not Found.', ['error' => 'Hospital Not Found'], 401);
+        }
+    }
 
-    // Add new specialty with custom validation rules
     public function store(HospitalStoreRequest $request){
-
-        // return response()->json($this->service->store($request->all()), 201);
         return new HospitalResource($this->service->store($request->all()));
     }
 }

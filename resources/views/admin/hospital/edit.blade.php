@@ -12,17 +12,14 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
-                            <li class="breadcrumb-item"><a href="{{ route('hospital.create') }}" class="btn btn-primary btn-sm">Add New Hospital</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('hospital.create') }}" class="btn btn-success btn-sm">Approve</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('hospital.create') }}" class="btn btn-danger btn-sm">Disapprove</a></li>
-
+                            <li class="breadcrumb-item"><a href="{{ route('hospital.index') }}" class="btn btn-primary btn-sm">Hospital List</a></li>
                         </ol>
                     </div>
                 </div>
             </div>
         </div>
         <div class="app-content">
-            <div class="form-container col-sm-8 offset-2">
+        <div class="form-container col-sm-10 offset-1">
             
             <form action="{{ route('hospital.update', $hospital->id) }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
                 @csrf
@@ -35,7 +32,7 @@
                         <div class="card-body">
 
                             <div class="input-group mb-3 row">
-                                <label for="name" class="col-md-3 col-form-label text-md-right">{{ __('Hospital Name') }}</label>
+                                <label for="name" class="col-md-2 col-form-labeltext-md-right">{{ __('Hospital Name') }}</label>
                                 <div class="col-md-8">
                                     <input id="name" type="text" class="form-control" name="name" value="{{ $hospital->name }}" required>
                                     @error('name')
@@ -45,7 +42,7 @@
                             </div>
                             
                             <div class="input-group mb-3 row">
-                                <label for="phone_no" class="col-md-3 col-form-label text-md-right">{{ __('Phone No') }}</label>
+                                <label for="phone_no" class="col-md-2 col-form-labeltext-md-right">{{ __('Phone No') }}</label>
                                 <div class="col-md-8">
                                     <input id="phone_no" type="tel" class="form-control" name="phone_no" value="{{ $hospital->phone_no }}" required>
                                     @error('phone_no')
@@ -55,7 +52,7 @@
                             </div>
                             
                             <div class="input-group mb-3 row">
-                                <label for="email" class="col-md-3 col-form-label text-md-right">{{ __('Email') }}</label>
+                                <label for="email" class="col-md-2 col-form-labeltext-md-right">{{ __('Email') }}</label>
                                 <div class="col-md-8">
                                     <input id="email" type="email" class="form-control" name="email" value="{{ $hospital->email }}" required>
                                     @error('email')
@@ -66,7 +63,7 @@
 
 
                             <div class="input-group mb-3 row">
-                                <label for="latitude" class="col-md-3 col-form-label text-md-right">{{ __('Latitude') }}</label>
+                                <label for="latitude" class="col-md-2 col-form-labeltext-md-right">{{ __('Latitude') }}</label>
                                 <div class="col-md-8">
                                     <input id="latitude" type="text" class="form-control" name="latitude" value="{{ $hospital->latitude }}" required>
                                     @error('latitude')
@@ -76,7 +73,7 @@
                             </div>
 
                             <div class="input-group mb-3 row">
-                                <label for="longitude" class="col-md-3 col-form-label text-md-right">{{ __('Longitude') }}</label>
+                                <label for="longitude" class="col-md-2 col-form-labeltext-md-right">{{ __('Longitude') }}</label>
                                 <div class="col-md-8">
                                     <input id="longitude" type="text" class="form-control" name="longitude" value="{{ $hospital->longitude }}" required>
                                     @error('longitude')
@@ -87,16 +84,46 @@
 
                             <div class="col-sm-12" style="margin-bottom:10px;">
                                 <div class="input-group mb-3 row">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="address">Address </span>
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for="address">Address </span>
                                     </label>
                                     <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <textarea name="address" class="form-control">{{ $hospital->address }}</textarea>
+                                        <textarea name="address" class="form-control ckeditor">{{ $hospital->address }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" style="margin-bottom:10px;">
+                                <div class="input-group mb-3 row">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for="description">About </span>
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <textarea name="description" class="form-control ckeditor">{{ $hospital->description }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" style="margin-bottom:10px;">
+                                <div class="input-group mb-3 row">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for="services">Services </span>
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <textarea name="services" class="form-control ckeditor">{{ $hospital->services }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" style="margin-bottom:10px;">
+                                <div class="input-group mb-3 row">
+                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for="contact">Contact </span>
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <textarea name="contact" class="form-control ckeditor">{{ $hospital->contact }}</textarea>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="input-group mb-3 row">
-                                <label for="name" class="col-md-3 col-form-label text-md-right">{{ __('Status') }}</label>
+                                <label for="name" class="col-md-2 col-form-labeltext-md-right">{{ __('Status') }}</label>
                                 <div class="col-md-8">
                                     <select name="status" class="form-control">
                                         <option value="1">Display</option>
