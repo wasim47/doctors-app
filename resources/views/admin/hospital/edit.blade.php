@@ -50,6 +50,16 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <div class="input-group mb-3 row">
+                                <label for="hotline" class="col-md-2 col-form-labeltext-md-right">{{ __('Hotline') }}</label>
+                                <div class="col-md-8">
+                                    <input id="hotline" type="tel" class="form-control" name="hotline" value="{{ $hospital->hotline }}" required>
+                                    @error('hotline')
+                                        <span style="color: red;">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
                             
                             <div class="input-group mb-3 row">
                                 <label for="email" class="col-md-2 col-form-labeltext-md-right">{{ __('Email') }}</label>
@@ -65,7 +75,7 @@
                             <div class="input-group mb-3 row">
                                 <label for="latitude" class="col-md-2 col-form-labeltext-md-right">{{ __('Latitude') }}</label>
                                 <div class="col-md-8">
-                                    <input id="latitude" type="text" class="form-control" name="latitude" value="{{ $hospital->latitude }}" required>
+                                    <input id="latitude" type="number" step="0.00000001" min="-90" max="90" class="form-control" name="latitude" value="{{ $hospital->latitude }}">
                                     @error('latitude')
                                     <span style="color: red;">{{ $message }}</span>
                                     @enderror
@@ -75,7 +85,7 @@
                             <div class="input-group mb-3 row">
                                 <label for="longitude" class="col-md-2 col-form-labeltext-md-right">{{ __('Longitude') }}</label>
                                 <div class="col-md-8">
-                                    <input id="longitude" type="text" class="form-control" name="longitude" value="{{ $hospital->longitude }}" required>
+                                    <input id="longitude" type="number" step="0.00000001" min="-180" max="180" class="form-control" name="longitude" value="{{ $hospital->longitude }}">
                                     @error('longitude')
                                     <span style="color: red;">{{ $message }}</span>
                                     @enderror

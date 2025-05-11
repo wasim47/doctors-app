@@ -21,6 +21,7 @@ class HospitalRepository implements HospitalRepositoryInterface {
             'name' => $data['name'] ?? '',
             'address' => $data['address'] ?? '',
             'phone_no' => $data['phone_no'] ?? '',
+            'hotline' => $data['hotline'] ?? '',
             'email' => $data['email'] ?? '',
             'address' => $data['address'] ?? '',
             'description' => $data['description'] ?? '',
@@ -34,8 +35,8 @@ class HospitalRepository implements HospitalRepositoryInterface {
     }
 
     public function find($id){
-        return Hospital::select('name','hotline','phone_no','email','address','description','services','contact')
-        ->where('id',$id)->get();
+        return Hospital::select('id','name','hotline','phone_no','email','address','description','services','contact')
+        ->where('id',$id)->first();
     }
 
     public function update($id, array $data)
@@ -45,6 +46,7 @@ class HospitalRepository implements HospitalRepositoryInterface {
 			'name' => $data['name'] ?? '',
             'address' => $data['address'] ?? '',
             'phone_no' => $data['phone_no'] ?? '',
+            'hotline' => $data['hotline'] ?? '',
             'email' => $data['email'] ?? '',
             'address' => $data['address'] ?? '',
             'description' => $data['description'] ?? '',

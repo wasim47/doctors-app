@@ -63,7 +63,7 @@
                             <div class="input-group mb-3 row">
                                 <label for="latitude" class="col-md-2 col-form-label text-md-right">{{ __('Latitude') }}</label>
                                 <div class="col-md-8">
-                                    <input id="latitude" type="text" class="form-control" name="latitude" value="{{ old('latitude') }}" required>
+                                    <input id="latitude" type="number" step="0.00000001" min="-90" max="90" class="form-control" name="latitude" value="{{ old('latitude') }}">
                                     @error('latitude')
                                     <span style="color: red;">{{ $message }}</span>
                                     @enderror
@@ -73,7 +73,7 @@
                             <div class="input-group mb-3 row">
                                 <label for="longitude" class="col-md-2 col-form-label text-md-right">{{ __('Longitude') }}</label>
                                 <div class="col-md-8">
-                                    <input id="longitude" type="text" class="form-control" name="longitude" value="{{ old('longitude') }}" required>
+                                    <input id="longitude" type="number" step="0.00000001" min="-180" max="180" class="form-control" name="longitude" value="{{ old('longitude') }}">
                                     @error('longitude')
                                     <span style="color: red;">{{ $message }}</span>
                                     @enderror
