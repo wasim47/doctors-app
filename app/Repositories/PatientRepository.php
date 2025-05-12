@@ -40,8 +40,8 @@ class PatientRepository implements PatientRepositoryInterface
         ->where('patient_id', $getPatientID->id)
         ->get()
         ->map(function ($doc) {
-            $doc->created_at = Carbon::parse($doc->created_at)->format('Y-m-d');
-            $doc->updated_at = Carbon::parse($doc->updated_at)->format('Y-m-d');
+            $doc->created_at = $doc->created_at ? Carbon::parse($doc->created_at)->format('Y-m-d') : null;
+            $doc->updated_at = $doc->updated_at ? Carbon::parse($doc->updated_at)->format('Y-m-d') : null;
             return $doc;
         });
     }
