@@ -74,9 +74,10 @@ class DoctorRepository implements DoctorRepositoryInterface
     {
         $doctor = Doctor::with([
             'specialities:id,name',
-            'branches:id,name',
+            // 'branches:id,name',
             'schedule' => function ($query) use ($branchId) {
-                $query->where('branch_id', $branchId)
+                $query->with('branch:id,name,address')
+                      ->where('branch_id', $branchId)
                       ->select('id', 'doctor_id', 'days_of_weeks', 'branch_id');
             }
         ])

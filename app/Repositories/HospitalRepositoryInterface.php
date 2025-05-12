@@ -8,5 +8,6 @@ interface HospitalRepositoryInterface
     public function getList();
     public function create(array $data);
     public function find($id);
+    public function profile($id);
     public function update($id, array $data);
 }

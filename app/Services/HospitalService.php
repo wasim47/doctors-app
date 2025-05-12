@@ -29,6 +29,11 @@ class HospitalService {
         return $this->repository->find($id);
     }
 
+    public function profile($id){
+
+        return $this->repository->profile($id);
+    }
+
     public function update($id, $data){
 
         return $this->repository->update($id, $data);

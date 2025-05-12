@@ -25,9 +25,9 @@ class HospitalController extends BaseController
     }
 
     public function show($id){
-        $response = $this->service->find($id);
+        $response = $this->service->profile($id);
         if($response){
-            return $this->successResponse($this->service->find($id), 'Hospital Details', Response::HTTP_OK);
+            return $this->successResponse($response, 'Hospital Details', Response::HTTP_OK);
         }
         else{
             return $this->errorResponse('Hospital Not Found.', ['error' => 'Hospital Not Found'], 401);

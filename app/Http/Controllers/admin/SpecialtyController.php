@@ -63,7 +63,7 @@ class SpecialtyController extends BaseController
 					$directoryPath = public_path('uploads/speciality');
                     
                     if (!file_exists(($directoryPath))) {
-                        mkdir($directoryPath, 0777, true);
+                        mkdir($directoryPath, 0755, true);
                     }
                     $pathLarge = $directoryPath.'/'.$savedFileName;
           			$this->imageResize($file,$pathLarge,$savedFileName, 100, 100);

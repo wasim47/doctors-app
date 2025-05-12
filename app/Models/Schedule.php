@@ -24,4 +24,8 @@ class Schedule extends Model
     public function shift(){
         return $this->hasMany(Shift::class, 'schedule_id', 'id');
     }
+
+    public function branch(){
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
 }

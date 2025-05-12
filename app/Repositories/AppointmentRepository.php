@@ -26,7 +26,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
             return false;
         }
         
-        $query = Appointment::with('doctor:id,first_name,last_name,degree,designation,image')
+        $query = Appointment::with('doctor:id,first_name,last_name,degree,designation,image','schedule:id,branch_id','schedule.branch:id,name,address')
             ->select('id AS appointment_id', 'doctor_id', 'patient_id', 'schedule_id','shift_id','serial_no','patient_family_id','appointment_date', 'appointment_time','appointment_status')
             ->where('patient_id', $getPatientID->id);
 
@@ -42,8 +42,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
             }
         }
         
-        $appointment = $query->get();
-        return $appointment;
+        return $query->get();
     }
 
     public function create($data)

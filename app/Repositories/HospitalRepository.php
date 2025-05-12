@@ -26,6 +26,7 @@ class HospitalRepository implements HospitalRepositoryInterface {
             'address' => $data['address'] ?? '',
             'description' => $data['description'] ?? '',
             'services' => $data['services'] ?? '',
+            'banner' => $data['image'] ?? '',
             'contact' => $data['contact'] ?? '',
             'latitude' => $data['latitude'] ?? 0,
             'longitude' => $data['longitude'] ?? 0,
@@ -35,9 +36,34 @@ class HospitalRepository implements HospitalRepositoryInterface {
     }
 
     public function find($id){
-        return Hospital::select('id','name','hotline','phone_no','email','address','description','services','contact')
+        return Hospital::select('id','name','hotline','phone_no','email','address','banner','description','services','contact')
         ->where('id',$id)->first();
     }
+
+    public function profile($id)
+    {
+        $hospital = Hospital::select(
+            'id',
+            'name',
+            'hotline',
+            'phone_no',
+            'email',
+            'address',
+            'banner',
+            'description',
+            'services',
+            'contact'
+        )->where('id', $id)->first();
+
+        if ($hospital) {
+            $hospital->banner = $hospital->banner
+                ? asset('uploads/hospital/' . $hospital->banner)
+                : asset('assets/img/default-hospital-banner.png'); // optional default
+        }
+
+        return $hospital;
+    }
+
 
     public function update($id, array $data)
     {
@@ -51,6 +77,7 @@ class HospitalRepository implements HospitalRepositoryInterface {
             'address' => $data['address'] ?? '',
             'description' => $data['description'] ?? '',
             'services' => $data['services'] ?? '',
+            'banner' => $data['image'] ?? '',
             'contact' => $data['contact'] ?? '',
             'latitude' => $data['latitude'] ?? 0,
             'longitude' => $data['longitude'] ?? 0,

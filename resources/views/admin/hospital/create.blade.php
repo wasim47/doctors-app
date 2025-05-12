@@ -41,6 +41,18 @@
                             </div>
 
                             <div class="input-group mb-3 row">
+                                <label for="name" class="col-md-3 col-form-label text-md-right">{{ __('Banner') }}</label>
+                                <div class="col-md-8">
+                                    <input id="banner" type="file" class="form-control" name="banner">
+                                    @error('banner')
+                                        <span style="color: red;">{{ $message }}</span>
+                                    @enderror
+                                    <br>
+                                    <small class="text-danger">Size should be Width: 1600 x Height: 660</small>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3 row">
                                 <label for="phone_no" class="col-md-2 col-form-label text-md-right">{{ __('Phone No') }}</label>
                                 <div class="col-md-8">
                                     <input id="phone_no" type="tel" class="form-control" name="phone_no" value="{{ old('phone_no') }}" required>
