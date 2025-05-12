@@ -58,7 +58,7 @@ class HospitalRepository implements HospitalRepositoryInterface {
         if ($hospital) {
             $hospital->banner = $hospital->banner
                 ? asset('uploads/hospital/' . $hospital->banner)
-                : asset('assets/img/default-hospital-banner.png'); // optional default
+                : asset('assets/img/default-hospital-banner.webp'); // optional default
         }
 
         return $hospital;
