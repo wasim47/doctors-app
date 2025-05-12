@@ -32,10 +32,15 @@ class PatientRepository implements PatientRepositoryInterface
             return false;
         }
 
-        $documents = PatientDocument::with(['patientFamily:id,first_name,last_name', 'files:id,file_path,document_id,DATE(created_at),updated_at'])
+        $documents = PatientDocument::with(['patientFamily:id,first_name,last_name', 'files:id,file_path,document_id,created_at,updated_at'])
             ->select('id', 'patient_family_id', 'document_name','created_at','updated_at')
             ->where('patient_id', $getPatientID->id)
-            ->get();
+            ->get()
+            ->map(function ($doc) {
+                $doc->created_at = $doc->created_at->format('Y-m-d');
+                $doc->updated_at = $doc->updated_at->format('Y-m-d');
+                return $doc;
+            });;
 
         return $documents;
     }
