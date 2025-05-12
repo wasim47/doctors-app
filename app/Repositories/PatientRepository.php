@@ -32,8 +32,8 @@ class PatientRepository implements PatientRepositoryInterface
             return false;
         }
 
-        $documents = PatientDocument::with(['patientFamily:id,first_name,last_name', 'files:id,file_path,document_id'])
-            ->select('id', 'patient_family_id', 'document_name')
+        $documents = PatientDocument::with(['patientFamily:id,first_name,last_name', 'files:id,file_path,document_id,created_at,updated_at'])
+            ->select('id', 'patient_family_id', 'document_name','created_at','updated_at')
             ->where('patient_id', $getPatientID->id)
             ->get();
 
