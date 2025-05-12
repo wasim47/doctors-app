@@ -9,6 +9,7 @@ use App\Models\PatientDocumentFile;
 use App\Models\User;
 use App\Repositories\PatientRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class PatientRepository implements PatientRepositoryInterface
@@ -26,23 +27,23 @@ class PatientRepository implements PatientRepositoryInterface
 
     public function documentList()
     {
-        $baseUrl = env('BACKEND_URL');
         $getPatientID = Patient::select('id')->where('user_id', $this->getUserId())->first();
         if (!$getPatientID) {
             return false;
         }
 
-        $documents = PatientDocument::with(['patientFamily:id,first_name,last_name', 'files:id,file_path,document_id,created_at,updated_at'])
-            ->select('id', 'patient_family_id', 'document_name','created_at','updated_at')
-            ->where('patient_id', $getPatientID->id)
-            ->get()
-            ->map(function ($doc) {
-                $doc->created_at = $doc->created_at->format('Y-m-d');
-                $doc->updated_at = $doc->updated_at->format('Y-m-d');
-                return $doc;
-            });;
-
-        return $documents;
+        return PatientDocument::with([
+            'patientFamily:id,first_name,last_name', 
+            'files:id,file_path,document_id,created_at,updated_at'
+        ])
+        ->select('id', 'patient_family_id', 'document_name', 'created_at', 'updated_at')
+        ->where('patient_id', $getPatientID->id)
+        ->get()
+        ->map(function ($doc) {
+            $doc->created_at = Carbon::parse($doc->created_at)->format('Y-m-d');
+            $doc->updated_at = Carbon::parse($doc->updated_at)->format('Y-m-d');
+            return $doc;
+        });
     }
 
 
