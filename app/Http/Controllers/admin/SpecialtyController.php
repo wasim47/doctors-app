@@ -58,6 +58,7 @@ class SpecialtyController extends BaseController
             if($request->file('image')->isValid()) {
                 try {
                     $file = $request->file('image');
+                    $extension = strtolower($file->getClientOriginalExtension());
                     $savedFileName = 'speciality_'.time() . '.' . $file->getClientOriginalExtension();    
 
 					$directoryPath = public_path('uploads/speciality');
@@ -66,7 +67,11 @@ class SpecialtyController extends BaseController
                         mkdir($directoryPath, 0755, true);
                     }
                     $pathLarge = $directoryPath.'/'.$savedFileName;
-          			$this->imageResize($file,$pathLarge,$savedFileName, 100, 100);
+                    if ($extension === 'svg') {
+                        $file->move($directoryPath, $savedFileName);
+                    } else {
+                        $this->imageResize($file, $pathLarge, $savedFileName, 100, 100);
+                    }
 
                 } catch (Exception $e) {
               }
@@ -103,7 +108,8 @@ class SpecialtyController extends BaseController
             if($request->file('image')->isValid()) {
                 try {
                     $file = $request->file('image');
-                    $savedFileName = 'speciality_'.time() . '.' . $file->getClientOriginalExtension();    
+                    $extension = strtolower($file->getClientOriginalExtension());
+                    $savedFileName = 'speciality_'.time() . '.' . $file->getClientOriginalExtension();
 
 					$directoryPath = public_path('uploads/speciality');
                     
@@ -111,7 +117,11 @@ class SpecialtyController extends BaseController
                         mkdir($directoryPath, 0777, true);
                     }
                     $pathLarge = $directoryPath.'/'.$savedFileName;
-          			$this->imageResize($file,$pathLarge,$savedFileName, 100, 100);
+                    if ($extension === 'svg') {
+                        $file->move($directoryPath, $savedFileName);
+                    } else {
+                        $this->imageResize($file, $pathLarge, $savedFileName, 100, 100);
+                    }
 
                 } catch (Exception $e) {
               }
@@ -126,18 +136,6 @@ class SpecialtyController extends BaseController
         $data = $request->except('_token','_method');
         $response = $this->service->update($id, $data);
         return redirect('admin/sepeciality');
-
-        /* $fixbanner = Specialty::find($id);
-        $menuUpdate = array(
-			'name'=>  $request->name,
-			'details'=>  $request->details,
-			'icon'=>  $savedFileName,
-			'status'=>  $request->status,
-			'updated_at'=> date('Y-m-d H:i:s')
-		 );
-
-        $fixbanner->update($menuUpdate);
-        return redirect('admin/sepeciality'); */
     }
 
 
