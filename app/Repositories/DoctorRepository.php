@@ -13,6 +13,7 @@ use App\Services\UtilityService;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class DoctorRepository implements DoctorRepositoryInterface
@@ -105,8 +106,11 @@ class DoctorRepository implements DoctorRepositoryInterface
         }
 
         foreach ($shiftData as $shift) {
-            $time_slots = $this->generateTime($shift, $scheduleId, $doctorId, $appointment_date);
-            $shift->times =  $time_slots;
+            $start = Carbon::createFromFormat('H:i:s', $shift->start_time)->format('g:i A');
+            $end = Carbon::createFromFormat('H:i:s', $shift->end_time)->format('g:i A');
+            $shift->times =  $start . ' to ' . $end;
+            unset($shift->start_time);
+            unset($shift->end_time);
         }
 
         return $shiftData;

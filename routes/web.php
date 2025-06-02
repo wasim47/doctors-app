@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\SpecialtyController;
 use App\Http\Controllers\admin\BranchController;
 use App\Http\Controllers\admin\HospitalController;
+use App\Http\Controllers\admin\AppointmentController;
 use App\Http\Controllers\admin\DoctorController;
 use App\Http\Controllers\admin\PatientController;
 use App\Http\Controllers\admin\ScheduleController;
@@ -27,6 +28,7 @@ Route::middleware('guest')->group(function () {
 Route::prefix('admin')->middleware('auth:administration')->group(function () {
     Route::get('dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::post('logout', [AuthController::class, 'logout'])->name('admin.logout');
+    Route::resource('appointment', AppointmentController::class);
     Route::resource('sepeciality', SpecialtyController::class);
     Route::resource('branch', BranchController::class);
     Route::resource('hospital', HospitalController::class);

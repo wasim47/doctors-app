@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\v1;
+namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\AppointmentStoreRequest;
