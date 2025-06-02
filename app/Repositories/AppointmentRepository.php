@@ -59,12 +59,13 @@ class AppointmentRepository implements AppointmentRepositoryInterface
             $existingAppintment = Appointment::where([['id',$data['appointment_id']],['patient_id', $getPatientID->id]])->first();
         }
 
-        /* $getLastSerialOfDoctor = Appointment::where('doctor_id', $data['doctor_id'])->select('serial_no')->orderBy('id', 'DESC')->limit(1)->first();
-        if ($getLastSerialOfDoctor) {
-            $serialNo = $getLastSerialOfDoctor->serial_no + 1;
-        } else {
-            $serialNo = 1;
-        } */
+        if((isset($data['schedule_id']) && $data['schedule_id']!='') && (isset($data['shift_id']) && $data['shift_id']!='')){
+            $appointmentType = "Online Appointment";
+        }
+        else{
+            $appointmentType = "Call for Appointment";
+        }
+
         $appointmentData = [
             'doctor_id' => $data['doctor_id'],
             'patient_id' => $getPatientID->id,
@@ -73,7 +74,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface
             'shift_id' => $data['shift_id'] ?? null,
             'appointment_date' => $data['appointment_date'],
             'appointment_time' => $data['appointment_time'],
-            'appointment_type' => "Online Appointment",
+            'appointment_type' => $appointmentType,
             'reason' => "Doctor visiting",
             'serial_no' => $data['serial_no'],
             'appointment_status' => $this->utility::$appointmentStatus['pending'],
