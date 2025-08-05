@@ -7,7 +7,7 @@
                 </a>
             </li>
             <li class="nav-item d-none d-md-block">
-                <a href="#" class="nav-link">Home</a>
+                <a href="{{ route('admin.dashboard') }}" class="nav-link">Home</a>
             </li>
             <li class="nav-item d-none d-md-block">
                 <a href="#" class="nav-link">Contact</a>
@@ -18,7 +18,7 @@
             
             
 
-            <li class="nav-item dropdown">
+            <!-- <li class="nav-item dropdown">
                 <a class="nav-link" data-bs-toggle="dropdown" href="#">
                     <i class="bi bi-bell-fill"></i>
                     <span class="navbar-badge badge text-bg-warning">2</span>
@@ -38,7 +38,7 @@
                     <div class="dropdown-divider"></div>
                     <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                 </div>
-            </li>
+            </li> -->
 
             <li class="nav-item">
                 <a class="nav-link" href="#" data-lte-toggle="fullscreen">
@@ -49,20 +49,20 @@
 
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                    <img src="{{ asset('assets/img/user2-160x160.jpg') }}" class="user-image rounded-circle shadow" alt="User Image">
-                    <span class="d-none d-md-inline">Mohammad Wasim</span>
+                    <img src="{{ asset('assets/img/admin.jpg') }}" class="user-image rounded-circle shadow" alt="User Image">
+                    <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                     <li class="user-header text-bg-primary">
-                        <img src="{{ asset('assets/img/user2-160x160.jpg') }}" class="rounded-circle shadow" alt="User Image">
+                        <img src="{{ asset('assets/img/admin.jpg') }}" class="rounded-circle shadow" alt="User Image">
                         <p>
-                            Alexander Pierce - Web Developer
-                            <small>Member since Nov. 2023</small>
+                        {{ auth()->user()->name }}
+                        <small>Member since {{ auth()->user()->created_at }}</small>
                         </p>
                     </li>
 
                     <li class="user-footer">
-                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                        <!-- <a href="#" class="btn btn-default btn-flat">Profile</a> -->
                         <form action="{{ route('admin.logout') }}" method="POST" style="display:inline;">
                             @csrf
                             <button type="submit" class="btn btn-default btn-flat float-end">Sign out</button>

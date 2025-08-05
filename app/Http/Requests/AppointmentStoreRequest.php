@@ -21,7 +21,7 @@ class AppointmentStoreRequest extends FormRequest
             'shift_id' => ['nullable', 'integer', 'exists:shifts,id'],
             'appointment_date' => ['required', 'date'],
             'appointment_time' => ['nullable'],
-            'serial_no' => ['required'],
+            'serial_no' => ['nullable'],
             'appointment_id' => ['nullable'],
         ];
     }

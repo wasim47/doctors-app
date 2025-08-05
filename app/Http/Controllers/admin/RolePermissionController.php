@@ -14,14 +14,23 @@ class RolePermissionController extends Controller
     {
         $roles = Role::all();
         $modules = Module::all();
-
         return view('admin.roles_permission.assign', compact('roles', 'modules'));
     }
 
     public function getPermissionsByModule(Module $module)
     {
-        $permissions = $module->permissions;
-        return response()->json($permissions);
+        return response()->json($module->permissions);
+    }
+
+    public function getPermissionsByRole($roleId)
+    {
+        $role = Role::with('permissions')->findOrFail($roleId);
+        $allPermissions = Permission::with('module')->get();
+
+        return response()->json([
+            'permissions' => $allPermissions,
+            'assigned_permission_ids' => $role->permissions->pluck('id'),
+        ]);
     }
 
     public function saveAssignedPermissions(Request $request)
@@ -35,7 +44,6 @@ class RolePermissionController extends Controller
         $role = Role::findById($request->role_id);
 
         $permissions = Permission::whereIn('id', $request->permissions)->get();
-
         $role->syncPermissions($permissions);
 
         return redirect()->back()->with('success', 'Permissions assigned successfully.');

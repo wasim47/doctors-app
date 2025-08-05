@@ -2,17 +2,30 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\BaseController;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+// use App\Http\Controllers\BaseController;
+use Illuminate\Routing\Controller as BaseController;
+use App\Models\Doctor;
 use App\Services\DoctorService;
 use App\Services\CommonService;
 use Illuminate\Http\Request;
 
 class DoctorController extends BaseController
 {
-    public function __construct(
-        protected DoctorService $service,
-        protected CommonService $commonService
-    ) {}
+    use AuthorizesRequests;
+    
+    protected DoctorService $service;
+    protected CommonService $commonService;
+
+    public function __construct(DoctorService $service, CommonService $commonService)
+    {
+        $this->service = $service;
+        $this->commonService = $commonService;
+
+        // ✅ Safe to call these now
+        // $this->middleware('auth');
+        $this->authorizeResource(Doctor::class, 'doctor');
+    }
 
     public function index()
     {
