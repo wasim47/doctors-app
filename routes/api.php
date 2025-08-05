@@ -16,15 +16,7 @@ use App\Http\Controllers\api\v1\AuthController;
 use App\Http\Controllers\api\v1\ProfileController;
 
 
-/* Route::middleware(['auth:api'])->group(function () {
-    Route::get('profile', [ProfileController::class, 'profile']);
-    Route::post('profile-update', [ProfileController::class, 'profileUpdate']);
-    Route::post('change-password', [ProfileController::class, 'changePassword']);
-    Route::post('change-pin', [ProfileController::class, 'changePin']);
-    
-    Route::get('user', [AuthController::class, 'getUser']); // Correct syntax
-    Route::post('logout', [AuthController::class, 'logout']);
-}); */
+// Public API
 
 Route::controller(AuthController::class)->group(function($route){
 
@@ -79,6 +71,8 @@ Route::controller(AuthController::class)->group(function($route){
     });
 });
 
+
+// Auth Route
 
 Route::group(['prefix' => '/', 'middleware' => 'auth:api', 'namespace' => 'api\v1',], function($route) {
 

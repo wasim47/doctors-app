@@ -28,7 +28,7 @@ class RedirectIfAuthenticated
                 if ($guard === 'administration') {
                     return redirect()->route('admin.dashboard');  // Redirect to admin dashboard
                 } elseif ($guard === 'web') {
-                    return redirect()->route('user.dashboard');  // Redirect to user dashboard
+                    return redirect()->route('admin.dashboard');  // Redirect to user dashboard
                 }
             }
         }

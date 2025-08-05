@@ -23,13 +23,4 @@ class AdminController extends BaseController
     {
         return view('admin.dashboard');
     }
-
-    // Logout user
-    /* public function logout()
-    {
-        Auth::guard('administration')->logout();
-        return redirect()->route('admin.login'); // Redirect to login page
-    } */
-
-    
 }
